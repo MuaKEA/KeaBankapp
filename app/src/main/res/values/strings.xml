@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">KeaBank</string>
+    <string name="pass_word">password</string>
+    <string name="welcome_to_kea_bank_please_sign">Welcome to Kea bank please sign</string>
+    <string name="login">Login</string>
+    <string name="remember_me">remember me</string>
+    <string name="email">email</string>
+    <string name="welcome_message">Thank you for choosing KeaBank, we just need some info about you and you will soon be able to sign in</string>
+    <string name="name_your_account">name your Account</string>
+    <string name="disclamer">disclamer: i here by signing, not granting Kea bank full acces to my others banks accouts, and will be granted a random number of free money(not real money) in as starting doposit from the Kea server</string>
+    <string name="full_name">Full name</string>
+    <string name="sign_here">sign here</string>
+    <string name="conformpassword">Conformpassword</string>
+    <string name="Conformbutton">I have Read And conformed</string>
+</resources>
