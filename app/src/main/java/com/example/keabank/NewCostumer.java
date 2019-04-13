@@ -112,7 +112,7 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
         @Override
         protected String doInBackground(String... strings) {
 
-            String webapiadress = "http://10.149.88.167:8888/registration?username="+editTextsarray[0].getText().toString()+"&password="+ editTextsarray[2].getText().toString();
+            String webapiadress = "http://10.149.88.167:8888/createuser?fullname="+editTextsarray[1]+"&username="+editTextsarray[0]+"&password="+editTextsarray[2];
             String reponse = "";
             URL url;
             try {

@@ -101,5 +101,24 @@
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
+    <Button
+        android:id="@+id/RegisterUser"
+        android:layout_width="395dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="135dp"
+        android:background="@drawable/roundcorners"
+        android:text="Sig up"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Sign_in"
+        app:layout_constraintVertical_bias="0.6" />
+
 
 </android.support.constraint.ConstraintLayout>

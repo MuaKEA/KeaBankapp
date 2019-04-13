@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 public class Login extends AppCompatActivity implements View.OnClickListener  {
     EditText Email, Password;
     CheckBox remember_Checkbox;
-    Button Login;
+    Button Login, Createuser;
     String Tag = "Login class-->";
 
     @Override
@@ -36,10 +36,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
         }
 
         Login.setOnClickListener(this);
+        Createuser.setOnClickListener(this);
+
     }
 
     private void startup() {
         Email = findViewById(R.id.email);
+        Createuser=findViewById(R.id.RegisterUser);
         Password = findViewById(R.id.password);
         remember_Checkbox = findViewById(R.id.Remember_me);
         Login = findViewById(R.id.Sign_in);
@@ -68,7 +71,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
                 break;
 
-
+            case R.id.RegisterUser:
+                Intent intent = new Intent(this,NewCostumer.class);
+                startActivity(intent);
 
         }
     }
