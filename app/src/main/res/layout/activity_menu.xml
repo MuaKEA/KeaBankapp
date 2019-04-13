@@ -7,6 +7,7 @@
     tools:context=".Menu">
 
     <LinearLayout
+        android:id="@+id/balance"
         android:layout_width="414dp"
         android:layout_height="167dp"
         android:background="@drawable/card"
@@ -15,6 +16,7 @@
         tools:layout_editor_absoluteY="0dp"></LinearLayout>
 
     <LinearLayout
+        android:id="@+id/transfer"
         android:layout_width="414dp"
         android:layout_height="167dp"
         android:background="@drawable/picture2"
@@ -23,6 +25,7 @@
         tools:layout_editor_absoluteY="167dp"></LinearLayout>
 
     <LinearLayout
+        android:id="@+id/account"
         android:layout_width="414dp"
         android:layout_height="167dp"
         android:background="@drawable/accounts"
@@ -31,6 +34,7 @@
         tools:layout_editor_absoluteY="334dp"></LinearLayout>
 
     <LinearLayout
+        android:id="@+id/currency"
         android:layout_width="423dp"
         android:layout_height="223dp"
         android:background="@drawable/valueta"
