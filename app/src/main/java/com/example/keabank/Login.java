@@ -26,12 +26,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getData();
+       getData();
         startup();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            Email.setText(extras.getString("username"));
+            Email.setText(extras.getString("usernmame"));
             Password.setText(extras.getString("password"));
         }
 
@@ -86,8 +86,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
         if(remember_Checkbox.isChecked() && serverresponse.equals(String.valueOf(200))){
             SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
             SharedPreferences.Editor editor = pref.edit();
-            editor.putString("username", Email.getText().toString());
-            editor.putString("password",Password.getText().toString());
+            editor.putString("username", Email.getText().toString().trim());
             editor.apply();
             startActivity(intent);
 
@@ -103,12 +102,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
     public void getData() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         String username = pref.getString("username","");
-        String password = pref.getString("password","");
         Log.d(Tag,username);
-        Log.d(Tag,password);
 
 
-        if(!username.equalsIgnoreCase("") || !password.equalsIgnoreCase("")){
+        if(!username.equalsIgnoreCase("")){
 
             Intent intent = new Intent(this,Menu.class);
             startActivity(intent);
@@ -142,6 +139,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
         protected String doInBackground(String... strings) {
 
             String webapiadress = "http://10.149.88.167:8888/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString();
+           Log.d(Tag,webapiadress);
             String reponse="";
             URL url;
             try {
@@ -150,14 +148,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
                 con.setRequestMethod("GET");
                 con.connect();
                 reponse=String.valueOf(con.getResponseCode());
-                Log.d("Server response",reponse);
+                Log.d(Tag,reponse);
 
             } catch (Exception e) {
                 e.printStackTrace();
 
 
             }
-
             return reponse;
         }
 

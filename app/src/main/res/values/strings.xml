@@ -14,7 +14,6 @@
     <string name="Conformbutton">I have Read And conformed</string>
 
 
-
     <string-array name="country_arrays">
         <item>Denmark</item>
         <item>Sweden</item>
@@ -23,7 +22,6 @@
         <item>Japan</item>
         <item>Turkey</item>
     </string-array>
-
 
 
 </resources>

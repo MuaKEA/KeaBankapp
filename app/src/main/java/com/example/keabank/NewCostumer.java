@@ -1,13 +1,11 @@
 package com.example.keabank;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -25,6 +23,8 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_costumer);
         init();
+
+
 
         agreementbtn.setOnClickListener(this);
     }
@@ -61,10 +61,8 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
     public boolean fieldsRequidmentschecker() {
         boolean isallok = true;
 
-        if (!emptyfieldschecker()) {
+        if (emptyfieldschecker()) {
             isallok = false;
-
-
         } else if (!editTextsarray[0].getText().toString().contains("@")) {
             editTextsarray[0].setError("@ expected");
             isallok = false;
@@ -74,8 +72,14 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
             editTextsarray[3].setError("Passwords doesn't match");
 
             isallok = false;
-        }
+        }else if (editTextsarray[4].getText().toString().length()<=0) {
 
+
+
+        isallok = false;
+    }
+
+        Log.d(Tag,"condition-->" +isallok);
 
         return isallok;
     }
@@ -87,10 +91,13 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
 
             if (editTextsarray[i].getText().length() <= 0) {
                 editTextsarray[i].setError("Required Info");
-                return true;
+                check=true;
 
             }
         }
+
+        Log.d(Tag,"emptyfieldschecker-->"+check);
+
         return check;
     }
 
@@ -111,17 +118,17 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
 
         @Override
         protected String doInBackground(String... strings) {
-
-            String webapiadress = "http://10.149.88.167:8888/createuser?fullname="+editTextsarray[1]+"&username="+editTextsarray[0]+"&password="+editTextsarray[2];
+            String webapiadress = "http://10.149.88.167:8888/createuser?fullname="+editTextsarray[1].getText().toString()+"&username="+editTextsarray[0].getText().toString()+"&password="+editTextsarray[2].getText().toString();
             String reponse = "";
+
             URL url;
             try {
                 url = new URL(webapiadress);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("Post");
+                con.setRequestMethod("POST");
                 con.connect();
                 reponse = String.valueOf(con.getResponseCode());
-                Log.d("Server response", reponse);
+                Log.d(Tag, reponse);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -129,7 +136,7 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
 
             }
 
-            return reponse;
+            return null;
         }
 
     }
