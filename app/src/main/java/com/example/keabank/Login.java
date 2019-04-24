@@ -12,6 +12,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
@@ -20,19 +24,21 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
     EditText Email, Password;
     CheckBox remember_Checkbox;
     Button Login, Createuser;
-    String Tag = "Login class-->";
+    String Tag = "Login class";
+    String ip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-       getData();
+        getserverip();
         startup();
+        getData();
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             Email.setText(extras.getString("usernmame"));
-            Password.setText(extras.getString("password"));
         }
 
         Login.setOnClickListener(this);
@@ -78,19 +84,21 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
         }
     }
 
-    public void loginchecker (String serverresponse ){
+    public void loginchecker (String serverresponse){
         Intent intent = new Intent(this, Menu.class);
         Log.d(Tag,serverresponse);
 
 
         if(remember_Checkbox.isChecked() && serverresponse.equals(String.valueOf(200))){
             SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+            pref.edit().clear().apply();
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("username", Email.getText().toString().trim());
             editor.apply();
             startActivity(intent);
 
         }else if(serverresponse.equals(String.valueOf(200))){
+
             startActivity(intent);
 
 
@@ -102,21 +110,55 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
     public void getData() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         String username = pref.getString("username","");
-        Log.d(Tag,username);
 
 
-        if(!username.equalsIgnoreCase("")){
 
-            Intent intent = new Intent(this,Menu.class);
-            startActivity(intent);
 
+        if (username!=null) {
+            Log.d(Tag, username + "<-- username after if");
+            Email.setText(username);
+            remember_Checkbox.setChecked(true);
         }
+    }
 
+        private void getserverip() {
+            BufferedReader bufferedReader = null;
 
+            try {
+                bufferedReader = new BufferedReader(new FileReader("/proc/net/arp"));
 
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    String[] splitted = line.split(" +");
+                    if (splitted != null && splitted.length >= 4) {
+                         ip = splitted[0];
+                        Log.d(Tag,ip + "<--ip split methd");
 
+                         String mac = splitted[3];
+                        if (mac.matches("60:03:08:94:7a:36")) {
+                            Log.d(Tag,ip + "<--ip");
+                            break;
+                        }
+                    }
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally{
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
     }
+
+
+
+
 
 
 
@@ -137,9 +179,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
         @Override
         protected String doInBackground(String... strings) {
+           Log.d(Tag, ip+ "<--do in backgoundmethod");
 
-            String webapiadress = "http://10.149.88.167:8888/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString();
-           Log.d(Tag,webapiadress);
+            String webapiadress = "http://"+ ip+":8888/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString();
+           Log.d(Tag,ip);
             String reponse="";
             URL url;
             try {

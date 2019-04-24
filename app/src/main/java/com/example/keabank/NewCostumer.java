@@ -13,7 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class NewCostumer extends AppCompatActivity implements View.OnClickListener {
-    EditText emailtxt, passwordtxt, conformpasswordtxt, signmenttext, full_nametxt;
+    EditText emailtxt, passwordtxt, conformpasswordtxt, signmenttext, full_nametxt ,Cpr;
     Button agreementbtn;
     EditText[] editTextsarray;
     String Tag = "NewCostumer";
@@ -36,7 +36,8 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
                 (EditText) findViewById(R.id.Full_name),
                 (EditText) findViewById(R.id.Password),
                 (EditText) findViewById(R.id.Conformpassword),
-                (EditText) findViewById(R.id.signment)};
+                (EditText) findViewById(R.id.signment),
+                (EditText) findViewById(R.id.CPR)};
 
 
     }
@@ -118,7 +119,7 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
 
         @Override
         protected String doInBackground(String... strings) {
-            String webapiadress = "http://10.149.88.167:8888/createuser?fullname="+editTextsarray[1].getText().toString()+"&username="+editTextsarray[0].getText().toString()+"&password="+editTextsarray[2].getText().toString();
+            String webapiadress = "http://10.149.88.167:8888/createuser?fullname="+editTextsarray[1].getText().toString()+"&username="+editTextsarray[0].getText().toString() + "&Cpr=" +editTextsarray[5].getText().toString()  +"&password="+editTextsarray[2].getText().toString();
             String reponse = "";
 
             URL url;

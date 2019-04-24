@@ -12,6 +12,7 @@
     <string name="sign_here">sign here</string>
     <string name="conformpassword">Conformpassword</string>
     <string name="Conformbutton">I have Read And conformed</string>
+    <string name="cpr">CPR</string>
 
 
     <string-array name="country_arrays">
@@ -22,6 +23,19 @@
         <item>Japan</item>
         <item>Turkey</item>
     </string-array>
+
+    <string-array name="accounts_type">
+        <item>Savings account</item>
+        <item>Budget account</item>
+        <item>Pension account</item>
+        <item>Default account</item>
+        <item>Business Account</item>
+    </string-array>
+
+
+
+
+
 
 
 </resources>
