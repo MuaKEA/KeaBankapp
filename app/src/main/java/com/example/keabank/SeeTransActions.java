@@ -32,8 +32,11 @@ String Tag="SeeTransActions";
         setContentView(R.layout.activity_seetransactions);
 
         Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-
+        Bundle extras = intent.getExtras();
+        if(extras != null) {
+           accountName=extras.getString("accountname");
+            Log.d(Tag,"inside extra's" + accountName);
+        }
 
     Getvaluesfromsharedpref();
       fillArrayList();
@@ -98,9 +101,8 @@ String Tag="SeeTransActions";
 
         @Override
         protected ArrayList<String> doInBackground(String... strings) {
-            Log.d(Tag,"contacting Server");
             ArrayList<String> AccountsFromServer = new ArrayList<>();
-            String webapiadress = "http://"+ip + ":8888/AccountTransfers?Email="+Email+"&Accountname="+ "Keabank";
+            String webapiadress = "http://"+ip + ":8888/AccountTransfers?Email="+Email+"&Accountname="+ accountName;
             String reponse = "";
 
             URL url;
@@ -124,20 +126,19 @@ String Tag="SeeTransActions";
                     boolean sendingOrreciving = innerJsonObject.getBoolean("sendingOrreciving");
 
                     if(!sendingOrreciving){
-                        dopositAfterTransaction="+" + dopositAfterTransaction;
+                        dopositBeforeTransaction="+" + dopositBeforeTransaction;
 
                     }else{
-                        dopositAfterTransaction="-" + dopositAfterTransaction;
+                        dopositBeforeTransaction="-" + dopositBeforeTransaction;
 
                     }
 
 
-                Log.d(Tag,"this is sparta-->" + transactionName);
-
-//
 
 
-                    AccountsFromServer.add(transactionName + "\t" +date + "\n" + dopositAfterTransaction + "\n" + dopositBeforeTransaction );
+
+
+                    AccountsFromServer.add(transactionName + "\t\t\t" +date + "\n" +dopositBeforeTransaction  + "\n" + dopositAfterTransaction );
 
                 }
 

@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -24,18 +26,20 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
     String Tag = "ChooseAccount";
     String Email, ip;
     ArrayList<String> accountsNames = new ArrayList<>();
-
+    Button createacoount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_account);
         Getvaluesfromsharedpref();
-        fillArrayList();
+
+
+        startup();
         inflatereclerview();
         giveStatusonArrayList();
 
 
-
+  createacoount.setOnClickListener(this);
 
 
 
@@ -69,7 +73,9 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void fillArrayList() {
+    private void startup() {
+
+        createacoount=findViewById(R.id.createaccount);
 
         GetAccounts getAccounts = new GetAccounts();
         try {
@@ -89,13 +95,15 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-
+        Intent intent = new Intent(this,CreateAccount.class);
+        startActivity(intent);
     }
 
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(this,SeeTransActions.class);
         intent.putExtra("accountname",accountsNames.get(position));
+        Log.d(Tag,accountsNames.get(position));
         startActivity(intent);
 
 
@@ -129,7 +137,7 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
                     JSONObject innerJsonObject= jsonarray.getJSONObject(i);
                     String account = innerJsonObject.getString("account");
                     String doposit = innerJsonObject.getString("currentdeposit");
-                    Log.d(Tag,account + " " + doposit);
+                    Log.d(Tag,account +"<---accountname");
                     accountsNames.add(account);
                     AccountsFromServer.add(account +"\nBalance " + doposit);
 

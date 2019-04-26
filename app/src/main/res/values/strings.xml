@@ -25,11 +25,11 @@
     </string-array>
 
     <string-array name="accounts_type">
-        <item>Savings account</item>
-        <item>Budget account</item>
-        <item>Pension account</item>
-        <item>Default account</item>
-        <item>Business Account</item>
+        <item>Savings</item>
+        <item>Budget</item>
+        <item>Pension</item>
+        <item>Default</item>
+        <item>Business</item>
     </string-array>
 
 
