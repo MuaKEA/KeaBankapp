@@ -27,7 +27,7 @@ public class CreateAccount extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
-       fillArrayList();
+        fillArrayList();
 
 
 
@@ -60,7 +60,6 @@ public class CreateAccount extends AppCompatActivity implements View.OnClickList
 
 
     }
-
 
 
 public class GetAccounts extends AsyncTask<String,String,String>{
