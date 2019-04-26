@@ -18,7 +18,7 @@
         <activity android:name=".NewCostumer" />
         <activity android:name=".Currency" />
         <activity android:name=".Account" />
-        <activity android:name=".TransferAccount" />
+        <activity android:name=".SeeTransActions" />
         <activity android:name=".ChooseAccount" />
         <activity android:name=".Paybills" />
         <activity android:name=".Menu" />

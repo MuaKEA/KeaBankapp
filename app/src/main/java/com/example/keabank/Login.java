@@ -86,19 +86,19 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
     public void loginchecker (String serverresponse){
         Intent intent = new Intent(this, Menu.class);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
         Log.d(Tag,serverresponse);
 
 
-        if(remember_Checkbox.isChecked() && serverresponse.equals(String.valueOf(200))){
-            SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-            pref.edit().clear().apply();
-            SharedPreferences.Editor editor = pref.edit();
+
+
+      if(serverresponse.equals(String.valueOf(200))){
             editor.putString("username", Email.getText().toString().trim());
+            editor.putBoolean("checkbox",remember_Checkbox.isChecked());
+            editor.putString("Ip",ip);
             editor.apply();
-            startActivity(intent);
-
-        }else if(serverresponse.equals(String.valueOf(200))){
-
             startActivity(intent);
 
 
@@ -110,14 +110,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
     public void getData() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         String username = pref.getString("username","");
+        boolean ischeckedboxchecked=pref.getBoolean("checkbox",false);
 
-
-
-
-        if (username!=null) {
+        if (ischeckedboxchecked && (username != null)) {
             Log.d(Tag, username + "<-- username after if");
             Email.setText(username);
             remember_Checkbox.setChecked(true);
+
         }
     }
 
@@ -130,6 +129,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     String[] splitted = line.split(" +");
+
+                    for (int i = 0; i <splitted.length ; i++) {
+
+
+                        Log.d(Tag, splitted[i] + "<--array");
+                    }
+
                     if (splitted != null && splitted.length >= 4) {
                          ip = splitted[0];
                         Log.d(Tag,ip + "<--ip split methd");

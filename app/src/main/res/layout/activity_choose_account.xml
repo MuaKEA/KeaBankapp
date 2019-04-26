@@ -6,4 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ChooseAccount">
 
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/Aacounts"
+        android:layout_width="411dp"
+        android:layout_height="322dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

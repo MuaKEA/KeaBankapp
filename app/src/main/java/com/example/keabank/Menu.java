@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 
 public class Menu extends AppCompatActivity implements View.OnClickListener {
     String Tag = "Menu Class";
@@ -45,17 +42,17 @@ TranferMoney.setOnClickListener(this);
         switch (v.getId()){
 
             case R.id.transfer:
-                Intent trans = new Intent(this, TransferAccount.class);
+                Intent trans = new Intent(this, SeeTransActions.class);
                 startActivity(trans);
                 break;
 
             case R.id.accounts:
-                Intent acc = new Intent(this, CreateAccount.class);
+                Intent acc = new Intent(this,ChooseAccount.class);
                 startActivity(acc);
                 break;
 
             case R.id.currency:
-                Intent curr = new Intent(this, Currency.class);
+                Intent curr = new Intent(this, CreateAccount.class);
                 startActivity(curr);
                 break;
             case R.id.moneytranfer:
