@@ -2,7 +2,6 @@ package com.example.keabank;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,23 +9,19 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import com.example.keabank.internetConnetivity.ServerGetCall;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class ChooseAccount extends AppCompatActivity implements View.OnClickListener,MyRecyclerViewAdapter.ItemClickListener {
     MyRecyclerViewAdapter adapter;
-    ArrayList<String> Accounts = new ArrayList<>();
     String Tag = "ChooseAccount";
-    String Email, ip;
-    ArrayList<String> accountsNames = new ArrayList<>();
+    String Email;
+    ArrayList<String> accountsNamesAndDeposit;
     Button createacoount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +45,15 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
 
         RecyclerView recyclerView = findViewById(R.id.Aacounts);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MyRecyclerViewAdapter(this,recyclerView.getId(),R.layout.recyclerview_row, Accounts);
+        adapter = new MyRecyclerViewAdapter(this,recyclerView.getId(),R.layout.recyclerview_row, accountsNamesAndDeposit);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
     }
 
 
     private void giveStatusonArrayList() {
-        for (int i = 0; i <accountsNames.size() ; i++) {
-            String a=Accounts.get(i);
+        for (int i = 0; i <accountsNamesAndDeposit.size() ; i++) {
+            String a=accountsNamesAndDeposit.get(i);
             Log.d(Tag,i + "accountsNames-index->" + a + "<---");
 
         }
@@ -67,9 +62,7 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
     private void Getvaluesfromsharedpref() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         Email=pref.getString("username","");
-        ip=pref.getString("Ip","");
         Log.d(Tag,Email + "<---Email from shared");
-        Log.d(Tag,ip + "<---ip from shared");
 
     }
 
@@ -77,9 +70,10 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
 
         createacoount=findViewById(R.id.createaccount);
 
-        GetAccounts getAccounts = new GetAccounts();
+
         try {
-            Accounts= getAccounts.execute().get();
+            getAllAccountsFromServer();
+
 
 
         } catch (ExecutionException e) {
@@ -87,7 +81,6 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Log.d(Tag,"arrayList is filled");
 
     }
 
@@ -102,58 +95,18 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(this,SeeTransActions.class);
-        intent.putExtra("accountname",accountsNames.get(position));
-        Log.d(Tag,accountsNames.get(position));
         startActivity(intent);
 
 
     }
 
+public void getAllAccountsFromServer() throws ExecutionException, InterruptedException {
+Log.d(Tag,"start");
+    ServerGetCall getAllAccounts = new ServerGetCall("/getaccounts?Email=" + Email,"getAllAccountsAndDeposit");
+    accountsNamesAndDeposit=getAllAccounts.execute().get();
+    Log.d(Tag,"end");
 
 
-    public class GetAccounts extends AsyncTask<String,String,ArrayList<String>> {
-
-
-        @Override
-        protected ArrayList<String> doInBackground(String... strings) {
-
-            ArrayList<String> AccountsFromServer= new ArrayList<>();
-            String webapiadress = "http://"+ip+":8888/getaccounts?Email=" + Email;
-            String reponse = "";
-
-            URL url;
-            try {
-                url = new URL(webapiadress);
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("GET");
-                con.connect();
-                BufferedReader bf = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                reponse=bf.readLine();
-
-                JSONObject myJsonResponse = new JSONObject(reponse);
-                JSONArray jsonarray = myJsonResponse.getJSONArray("accountsList");
-
-                for (int i = 0; i < jsonarray.length(); i++) {
-                    JSONObject innerJsonObject= jsonarray.getJSONObject(i);
-                    String account = innerJsonObject.getString("account");
-                    String doposit = innerJsonObject.getString("currentdeposit");
-                    Log.d(Tag,account +"<---accountname");
-                    accountsNames.add(account);
-                    AccountsFromServer.add(account +"\nBalance " + doposit);
-
-                }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-
-            }
-
-
-            return AccountsFromServer;
-        }
     }
-
-}
+    }
 

@@ -12,12 +12,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.example.keabank.internetConnetivity.ServerGetCall;
+
+
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class Login extends AppCompatActivity implements View.OnClickListener  {
@@ -25,13 +23,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
     CheckBox remember_Checkbox;
     Button Login, Createuser;
     String Tag = "Login class";
-    String ip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getserverip();
         startup();
         getData();
 
@@ -64,10 +60,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
             case R.id.Sign_in:
 
                 Log.d(Tag, "sign in button");
-                Passwordchecker passwordchecker = new Passwordchecker();
                 try {
-                    loginchecker(passwordchecker.execute().get());
-
+                   loginchecker(UsernameAndPasswordvalidation());
 
                 } catch (ExecutionException e) {
                     e.printStackTrace();
@@ -84,20 +78,20 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
         }
     }
 
-    public void loginchecker (String serverresponse){
+    public void loginchecker (Integer serverresponse){
         Intent intent = new Intent(this, Menu.class);
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
 
-        Log.d(Tag,serverresponse);
+
+        Log.d(Tag,serverresponse.toString());
 
 
 
 
-      if(serverresponse.equals(String.valueOf(200))){
+      if(serverresponse.equals(200)){
             editor.putString("username", Email.getText().toString().trim());
             editor.putBoolean("checkbox",remember_Checkbox.isChecked());
-            editor.putString("Ip",ip);
             editor.apply();
             startActivity(intent);
 
@@ -120,93 +114,17 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
         }
     }
 
-        private void getserverip() {
-            BufferedReader bufferedReader = null;
-
-            try {
-                bufferedReader = new BufferedReader(new FileReader("/proc/net/arp"));
-
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    String[] splitted = line.split(" +");
-
-                    for (int i = 0; i <splitted.length ; i++) {
 
 
-                        Log.d(Tag, splitted[i] + "<--array");
-                    }
-
-                    if (splitted != null && splitted.length >= 4) {
-                         ip = splitted[0];
-                        Log.d(Tag,ip + "<--ip split methd");
-
-                         String mac = splitted[3];
-                        if (mac.matches("60:03:08:94:7a:36")) {
-                            Log.d(Tag,ip + "<--ip");
-                            break;
-                        }
-                    }
-                }
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally{
-                try {
-                    bufferedReader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-    }
+public Integer UsernameAndPasswordvalidation() throws ExecutionException, InterruptedException {
 
 
+    ServerGetCall serverGetCall = new ServerGetCall("/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString(),"ResponseCode");
+    ArrayList<String> respons=serverGetCall.execute().get();
 
 
+        return Integer.parseInt(respons.get(0));
+}
 
 
-
-
-    public class Passwordchecker extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-           Log.d(Tag, ip+ "<--do in backgoundmethod");
-
-            String webapiadress = "http://"+ ip+":8888/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString();
-           Log.d(Tag,ip);
-            String reponse="";
-            URL url;
-            try {
-                url = new URL(webapiadress);
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("GET");
-                con.connect();
-                reponse=String.valueOf(con.getResponseCode());
-                Log.d(Tag,reponse);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-
-            }
-            return reponse;
-        }
-
-
-    }
 }

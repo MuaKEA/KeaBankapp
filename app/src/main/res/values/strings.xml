@@ -13,6 +13,8 @@
     <string name="conformpassword">Conformpassword</string>
     <string name="Conformbutton">I have Read And conformed</string>
     <string name="cpr">CPR</string>
+    <string name="Account">Account:</string>
+    <string name="create_new_account">create new Account</string>
 
 
     <string-array name="country_arrays">
@@ -31,11 +33,6 @@
         <item>Default</item>
         <item>Business</item>
     </string-array>
-
-
-
-
-
 
 
 </resources>

@@ -1,19 +1,16 @@
 package com.example.keabank;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.example.keabank.internetConnetivity.ServerPostCall;
+import java.util.concurrent.ExecutionException;
 
 public class NewCostumer extends AppCompatActivity implements View.OnClickListener {
-    EditText emailtxt, passwordtxt, conformpasswordtxt, signmenttext, full_nametxt ,Cpr;
     Button agreementbtn;
     EditText[] editTextsarray;
     String Tag = "NewCostumer";
@@ -42,17 +39,23 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
 
     }
 
-
     @Override
     public void onClick(View v) {
         Intent LoginActivity = new Intent(this, Login.class);
 
         if (fieldsRequidmentschecker()) {
-            Saveuser saveuser= new Saveuser();
-            saveuser.execute();
-            LoginActivity.putExtra("usernmame", editTextsarray[0].getText().toString());
-            LoginActivity.putExtra("password", editTextsarray[2].getText().toString());
-            startActivity(LoginActivity);
+            try {
+                Saveuser();
+                LoginActivity.putExtra("usernmame", editTextsarray[0].getText().toString());
+                LoginActivity.putExtra("password", editTextsarray[2].getText().toString());
+                startActivity(LoginActivity);
+
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
 
         }
 
@@ -73,12 +76,8 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
             editTextsarray[3].setError("Passwords doesn't match");
 
             isallok = false;
-        }else if (editTextsarray[4].getText().toString().length()<=0) {
+        }
 
-
-
-        isallok = false;
-    }
 
         Log.d(Tag,"condition-->" +isallok);
 
@@ -91,7 +90,7 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
         for (int i = 0; i < editTextsarray.length; i++) {
 
             if (editTextsarray[i].getText().length() <= 0) {
-                editTextsarray[i].setError("Required Info");
+                editTextsarray[i].setError("Required");
                 check=true;
 
             }
@@ -103,44 +102,11 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
     }
 
 
-    public class Saveuser extends AsyncTask<String, String, String> {
+   public boolean Saveuser() throws ExecutionException, InterruptedException {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String webapiadress = "http://10.149.88.167:8888/createuser?fullname="+editTextsarray[1].getText().toString()+"&username="+editTextsarray[0].getText().toString() + "&Cpr=" +editTextsarray[5].getText().toString()  +"&password="+editTextsarray[2].getText().toString();
-            String reponse = "";
-
-            URL url;
-            try {
-                url = new URL(webapiadress);
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("POST");
-                con.connect();
-                reponse = String.valueOf(con.getResponseCode());
-                Log.d(Tag, reponse);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-
-            }
-
-            return null;
-        }
-
-    }
+       ServerPostCall serverCall = new ServerPostCall("/createuser?fullname="+editTextsarray[1].getText().toString()+"&username="+editTextsarray[0].getText().toString() + "&Cpr=" +editTextsarray[5].getText().toString()  +"&password="+editTextsarray[2].getText().toString());
+       return serverCall.execute().get().equals("200");
+   }
 
 }
 

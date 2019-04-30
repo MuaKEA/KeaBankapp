@@ -8,11 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.example.keabank.internetConnetivity.ServerPostCall;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -48,15 +48,12 @@ String Tag = "CreateAccount";
     private void Getvaluesfromsharedpref() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         Email=pref.getString("username","");
-        ip=pref.getString("Ip","");
         Log.d(Tag,Email + "<---Email from shared");
-        Log.d(Tag,ip + "<---ip from shared");
 
     }
 
     @Override
     public void onClick(View v) {
-         final Intent intent = new Intent(this,ChooseAccount.class);
 
     if(accountype.getSelectedItem().equals("Pension")){
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
@@ -68,15 +65,13 @@ String Tag = "CreateAccount";
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        Saveaccount saveaccount =  new Saveaccount();
-                        saveaccount.execute();
 
                         try {
-                            if(saveaccount.execute().get().equals(200)){
-                                
+                            if(saveAccount().equals("200")){
+                                startChooseAccountActivity();
+
                             }
 
-                            startActivity(intent);
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {
@@ -96,49 +91,40 @@ String Tag = "CreateAccount";
         AlertDialog alert11 = builder1.create();
         alert11.show();
 
-    }
+    }else{
+        try {
+            saveAccount();
+            startChooseAccountActivity();
 
-
-
-    }
-    public class Saveaccount extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String webapiadress = "http://" +ip +":8888/newAccount?Email="+Email+"&Accountname="+accountname+"&AccountType=" + accountype.getSelectedItem().toString();
-            String reponse = "";
-
-            URL url;
-            try {
-                url = new URL(webapiadress);
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("POST");
-                con.connect();
-                reponse = String.valueOf(con.getResponseCode());
-                Log.d(Tag, reponse);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-
-            }
-
-            return reponse;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
     }
+
+
+
+
+    }
+
+    private void startChooseAccountActivity() {
+    Intent intent = new Intent(this,ChooseAccount.class);
+    startActivity(intent);
+
+
+    }
+
+
+  public String saveAccount() throws ExecutionException, InterruptedException {
+        ServerPostCall saveaccount =  new ServerPostCall("/newAccount?Email="+Email+"&Accountname="+accountname.getText().toString()+"&AccountType=" + accountype.getSelectedItem().toString());
+
+
+        return saveaccount.execute().get();
+
+  }
+
 
 
 }
