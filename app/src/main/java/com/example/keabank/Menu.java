@@ -56,7 +56,7 @@ TranferMoney.setOnClickListener(this);
                 startActivity(curr);
                 break;
             case R.id.moneytranfer:
-                Intent moneyT = new Intent(this, Currency.class);
+                Intent moneyT = new Intent(this, TransferMoneyMenu.class);
                 startActivity(moneyT);
                 break;
 

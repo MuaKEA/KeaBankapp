@@ -2,6 +2,9 @@ package com.example.keabank.internetConnetivity;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.keabank.Model.Accounts;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,10 +14,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class ServerGetCall extends AsyncTask<String,String,ArrayList<String>> {
+public class ServerGetCall extends AsyncTask<String,String,ArrayList<Accounts>> {
 private String url;
 private String operationName;
-ArrayList<String> Reponse = new ArrayList<>();
+ArrayList<Accounts> Reponse = new ArrayList<>();
 String Tag="ServerGetCall";
 
 public ServerGetCall(String url,String operationName) {
@@ -24,7 +27,7 @@ this.operationName=operationName;
 
 
     @Override
-    protected ArrayList<String> doInBackground(String... strings) {
+    protected ArrayList<Accounts> doInBackground(String... strings) {
 
         String ip=GetServerIp.getInstance();
         String webapiadress = ip + url;
@@ -45,12 +48,12 @@ this.operationName=operationName;
             switch (operationName) {
 
                 case "ResponseCode":
-                    GetReponseCode(String.valueOf(con.getResponseCode()));
+                    GetReponseCode(con.getResponseCode());
                     break;
 
-                case "GetAllAccountNames":
-                    GetAllAccountNames(reponse);
-                    break;
+//                case "GetAllAccountNames":
+//                    GetAllAccountNames(reponse);
+//                    break;
 
 
                 case "getAllAccountsAndDeposit":
@@ -86,9 +89,9 @@ this.operationName=operationName;
             for (int i = 0; i < jsonarray.length(); i++) {
                 JSONObject innerJsonObject = jsonarray.getJSONObject(i);
                 String account = innerJsonObject.getString("account");
-                String deposit = innerJsonObject.getString("currentdeposit");
+                double deposit = innerJsonObject.getDouble("currentdeposit");
                 String accounttype = innerJsonObject.getString("accounttype");
-                Reponse.add(account + " " + deposit + "\nAccounttype: " + accounttype);
+                Reponse.add(new Accounts(account,deposit,accounttype));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -96,21 +99,21 @@ this.operationName=operationName;
 
     }
 
-    private void GetAllAccountNames(String reponse) {
-        try {
-
-
-            JSONObject myJsonResponse = new JSONObject(reponse);
-            JSONArray jsonarray = myJsonResponse.getJSONArray("accountsList");
-            for (int i = 0; i < jsonarray.length(); i++) {
-                JSONObject innerJsonObject = jsonarray.getJSONObject(i);
-                String account = innerJsonObject.getString("account");
-                Reponse.add(account);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void GetAllAccountNames(String reponse) {
+//        try {
+//
+//
+//            JSONObject myJsonResponse = new JSONObject(reponse);
+//            JSONArray jsonarray = myJsonResponse.getJSONArray("accountsList");
+//            for (int i = 0; i < jsonarray.length(); i++) {
+//                JSONObject innerJsonObject = jsonarray.getJSONObject(i);
+//                String account = innerJsonObject.getString("account");
+//                Reponse.add(account);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
         private void GetAllTransActions(String reponse) {
             Log.d(Tag,reponse);
@@ -135,7 +138,7 @@ this.operationName=operationName;
 
                 }
 
-                Reponse.add(transactionName + "\t\t\t" + date + "\n" + dopositBeforeTransaction + "\n" + dopositAfterTransaction);
+                Reponse.add(new Accounts(transactionName,dopositBeforeTransaction,dopositAfterTransaction,date));
 
             }
 
@@ -148,9 +151,9 @@ this.operationName=operationName;
 
     }
 
-    private void GetReponseCode(String ReposeCode) {
-        Reponse.add(ReposeCode);
-       Log.d(Tag,ReposeCode);
+    private void GetReponseCode(int ReposeCode) {
+        Reponse.add(new Accounts(ReposeCode));
+       Log.d(Tag,ReposeCode+" ");
     }
 
 

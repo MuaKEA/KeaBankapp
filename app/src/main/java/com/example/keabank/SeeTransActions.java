@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+
+import com.example.keabank.Model.Accounts;
 import com.example.keabank.internetConnetivity.ServerGetCall;
 
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ String Tag="SeeTransActions";
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
+
         if(extras != null) {
            accountName=extras.getString("accountname");
             Log.d(Tag,"inside extra's" + accountName);
@@ -36,13 +39,15 @@ String Tag="SeeTransActions";
     Getvaluesfromsharedpref();
         try {
             fillArrayList();
+            status();
+            inflatereclerview();
+
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        inflatereclerview();
-        status();
+
 
 
     }
@@ -72,10 +77,17 @@ String Tag="SeeTransActions";
 
 
     private void fillArrayList() throws ExecutionException, InterruptedException {
-
+        ArrayList<Accounts> transaction;
+        transActions= new ArrayList<>();
         ServerGetCall getTranstions = new ServerGetCall("/AccountTransfers?Email="+Email+"&Accountname="+ accountName,"GetAllTransActions");
 
-        transActions=getTranstions.execute().get();
+        transaction=getTranstions.execute().get();
+        Log.d(Tag,transaction.size() +"transaction size");
+
+        for (int i = 0; i <transaction.size() ; i++) {
+            transActions.add(transaction.get(i).getTransactionName() +" "+ transaction.get(i).getDopositBeforeTransaction() + "\n\t\t" +  transaction.get(i).getDopositAfterTransaction() +" " +  transaction.get(i).getDate());
+
+        }
 
     }
 

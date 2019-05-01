@@ -2,7 +2,6 @@ package com.example.keabank;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.keabank.Model.Accounts;
 import com.example.keabank.internetConnetivity.ServerGetCall;
 
 
@@ -120,10 +120,10 @@ public Integer UsernameAndPasswordvalidation() throws ExecutionException, Interr
 
 
     ServerGetCall serverGetCall = new ServerGetCall("/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString(),"ResponseCode");
-    ArrayList<String> respons=serverGetCall.execute().get();
+    ArrayList<Accounts> respons=serverGetCall.execute().get();
 
 
-        return Integer.parseInt(respons.get(0));
+        return respons.get(0).getResonseCode();
 }
 
 

@@ -9,9 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import com.example.keabank.internetConnetivity.ServerGetCall;
 
-import org.json.JSONException;
+import com.example.keabank.Model.Accounts;
+import com.example.keabank.internetConnetivity.ServerGetCall;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -20,6 +20,7 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
     String Tag = "ChooseAccount";
     String Email;
     ArrayList<String> accountsNamesAndDeposit;
+    ArrayList<Accounts> accounts;
     Button createacoount;
 
     @Override
@@ -27,11 +28,8 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_account);
         Getvaluesfromsharedpref();
-
-
         startup();
         inflatereclerview();
-        giveStatusonArrayList();
 
 
   createacoount.setOnClickListener(this);
@@ -51,13 +49,7 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
     }
 
 
-    private void giveStatusonArrayList() {
-        for (int i = 0; i <accountsNamesAndDeposit.size() ; i++) {
-            String a=accountsNamesAndDeposit.get(i);
-            Log.d(Tag,i + "accountsNames-index->" + a + "<---");
 
-        }
-    }
 
     private void Getvaluesfromsharedpref() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
@@ -95,17 +87,21 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(this,SeeTransActions.class);
+        intent.putExtra("accountname",accounts.get(position).getAccountName());
         startActivity(intent);
 
 
     }
 
 public void getAllAccountsFromServer() throws ExecutionException, InterruptedException {
-Log.d(Tag,"start");
-    ServerGetCall getAllAccounts = new ServerGetCall("/getaccounts?Email=" + Email,"getAllAccountsAndDeposit");
-    accountsNamesAndDeposit=getAllAccounts.execute().get();
-    Log.d(Tag,"end");
 
+    accountsNamesAndDeposit= new ArrayList<>();
+    ServerGetCall getAllAccounts = new ServerGetCall("/getaccounts?Email=" + Email,"getAllAccountsAndDeposit");
+    accounts=getAllAccounts.execute().get();
+
+    for (int i = 0; i <accounts.size() ; i++) {
+        accountsNamesAndDeposit.add(accounts.get(i).getAccountName() +": " + accounts.get(i).getAccountType() +" " + accounts.get(i).getCurrentDeposit());
+    }
 
     }
     }
