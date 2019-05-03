@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.keabank.Logic.ServerReponse;
 import com.example.keabank.Model.Accounts;
 import com.example.keabank.internetConnetivity.ServerGetCall;
 
@@ -22,7 +23,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
     EditText Email, Password;
     CheckBox remember_Checkbox;
     Button Login, Createuser;
-    String Tag = "Login class";
+    String Tag = "Login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +61,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
             case R.id.Sign_in:
 
                 Log.d(Tag, "sign in button");
-                try {
+
                    loginchecker(UsernameAndPasswordvalidation());
 
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
 
                 break;
 
@@ -97,7 +94,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
 
         }else
-            Toast.makeText(this, "Wrong password",
+            Toast.makeText(this, "username or password is wrong or both who knows",
                     Toast.LENGTH_LONG).show();
     }
 
@@ -116,14 +113,16 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
 
 
-public Integer UsernameAndPasswordvalidation() throws ExecutionException, InterruptedException {
+public Integer UsernameAndPasswordvalidation()  {
 
 
-    ServerGetCall serverGetCall = new ServerGetCall("/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString(),"ResponseCode");
-    ArrayList<Accounts> respons=serverGetCall.execute().get();
+    ServerReponse serverGetCall = new ServerReponse("/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString(),"ResponseCode");
+    int respons=serverGetCall.GetReponseCode();
 
-
-        return respons.get(0).getResonseCode();
+    if(respons>0){
+        return respons;
+    }
+    return 400 ;
 }
 
 

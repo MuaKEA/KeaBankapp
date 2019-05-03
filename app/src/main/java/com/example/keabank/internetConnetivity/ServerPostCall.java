@@ -6,7 +6,7 @@ import android.util.Log;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class ServerPostCall extends AsyncTask<String,String,String> {
+public class ServerPostCall extends AsyncTask<String,String,Integer> {
 private String url;
 
 public ServerPostCall(String url){
@@ -15,10 +15,10 @@ public ServerPostCall(String url){
 }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected Integer doInBackground(String... strings) {
         String ip=GetServerIp.getInstance();
         String webapiadress = ip + url;
-        String reponse = "";
+        Integer reponse=null;
 
         URL url;
         try {
@@ -26,7 +26,7 @@ public ServerPostCall(String url){
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             con.connect();
-            reponse = String.valueOf(con.getResponseCode());
+            reponse = con.getResponseCode();
 
 
         } catch (Exception e) {

@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".TransferMoneyMenu"></activity>
+        <activity android:name=".SendMoneyToOthers"></activity>
+        <activity android:name=".TransferMoneyMenu" />
         <activity android:name=".CreateAccount" />
         <activity android:name=".NewCostumer" />
         <activity android:name=".Currency" />

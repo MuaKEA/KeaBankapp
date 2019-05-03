@@ -1,12 +1,12 @@
 package com.example.keabank.Model;
 
-import com.example.keabank.Account;
 
 abstract class TransActions {
         private String transactionName;
        private String dopositBeforeTransaction;
        private String dopositAfterTransaction;
         private String date;
+        private double transactionAmmount;
 
         public TransActions() {
 
@@ -15,6 +15,12 @@ abstract class TransActions {
         public TransActions(String transactionName, String dopositBeforeTransaction, String dopositAfterTransaction, String date) {
             this.transactionName = transactionName;
             this.dopositBeforeTransaction = dopositBeforeTransaction;
+            this.dopositAfterTransaction = dopositAfterTransaction;
+            this.date = date;
+
+        }   public TransActions(String transactionName, double transactionAmmount, String dopositAfterTransaction, String date) {
+            this.transactionName = transactionName;
+            this.transactionAmmount = transactionAmmount;
             this.dopositAfterTransaction = dopositAfterTransaction;
             this.date = date;
         }
@@ -51,7 +57,14 @@ abstract class TransActions {
             this.date = date;
         }
 
+    public double getTransactionAmmount() {
+        return transactionAmmount;
     }
+
+    public void setTransactionAmmount(double transactionAmmount) {
+        this.transactionAmmount = transactionAmmount;
+    }
+}
 
 
     public class Accounts extends TransActions {
@@ -59,11 +72,16 @@ abstract class TransActions {
     private Double currentDeposit;
     private String AccountType;
     private int ResonseCode;
+    private String Cpr;
 
 
     public Accounts(String transactionName, String dopositBeforeTransaction, String dopositAfterTransaction, String date) {
         super(transactionName, dopositBeforeTransaction, dopositAfterTransaction, date);
     }
+
+        public Accounts(String transactionName, double transactionAmmount, String dopositAfterTransaction, String date, boolean sendingOrreciving) {
+            super(transactionName, transactionAmmount, dopositAfterTransaction, date);
+        }
 
     public Accounts(String accountName, Double currentDeposit, String accountType) {
         this.accountName = accountName;
@@ -74,7 +92,9 @@ abstract class TransActions {
     public Accounts(int ResonseCode){
         this.ResonseCode=ResonseCode;
     }
-
+        public Accounts(String Cpr){
+            this.Cpr=Cpr;
+        }
 
         public String getAccountName() {
             return accountName;
@@ -106,6 +126,14 @@ abstract class TransActions {
 
         public void setResonseCode(int resonseCode) {
             ResonseCode = resonseCode;
+        }
+
+        public String getCpr() {
+            return Cpr;
+        }
+
+        public void setCpr(String cpr) {
+            Cpr = cpr;
         }
 
         @Override

@@ -8,12 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-
-import com.example.keabank.Model.Accounts;
-import com.example.keabank.internetConnetivity.ServerGetCall;
-
+import com.example.keabank.Logic.ServerReponse;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 
 public class SeeTransActions extends AppCompatActivity implements MyRecyclerViewAdapter.ItemClickListener {
@@ -36,17 +32,12 @@ String Tag="SeeTransActions";
             Log.d(Tag,"inside extra's" + accountName);
         }
 
-    Getvaluesfromsharedpref();
-        try {
-            fillArrayList();
-            status();
-            inflatereclerview();
+              Getvaluesfromsharedpref();
+              fillArrayList();
+              status();
+              inflatereclerview();
 
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
 
 
@@ -76,18 +67,11 @@ String Tag="SeeTransActions";
 
 
 
-    private void fillArrayList() throws ExecutionException, InterruptedException {
-        ArrayList<Accounts> transaction;
+    private void fillArrayList()  {
+
         transActions= new ArrayList<>();
-        ServerGetCall getTranstions = new ServerGetCall("/AccountTransfers?Email="+Email+"&Accountname="+ accountName,"GetAllTransActions");
-
-        transaction=getTranstions.execute().get();
-        Log.d(Tag,transaction.size() +"transaction size");
-
-        for (int i = 0; i <transaction.size() ; i++) {
-            transActions.add(transaction.get(i).getTransactionName() +" "+ transaction.get(i).getDopositBeforeTransaction() + "\n\t\t" +  transaction.get(i).getDopositAfterTransaction() +" " +  transaction.get(i).getDate());
-
-        }
+        ServerReponse getTranstions = new ServerReponse("/AccountTransfers?Email="+Email+"&Accountname="+ accountName,"GetAllTransActions");
+        transActions= getTranstions.GetAllTransActions();
 
     }
 

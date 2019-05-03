@@ -27,12 +27,26 @@
     </string-array>
 
     <string-array name="accounts_type">
-        <item>Savings</item>
+        <item>Standart</item>
         <item>Budget</item>
+        <item>Savings</item>
         <item>Pension</item>
-        <item>Default</item>
         <item>Business</item>
     </string-array>
 
+
+    <string-array name="automaticTransfer">
+        <item>Monthly(Defualt)</item>
+        <item>Dayli</item>
+        <item>Yearly</item>
+    </string-array>
+
+    <string-array name="servicecodearray">
+        <item>+71</item>
+        <item>+72</item>
+        <item>+73</item>
+        <item>+74</item>
+
+    </string-array>
 
 </resources>

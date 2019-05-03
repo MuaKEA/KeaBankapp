@@ -1,4 +1,4 @@
-package com.example.keabank.UsefulMethods;
+package com.example.keabank.Logic;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -15,13 +17,18 @@ public class Usefulmethods {
     private int mYear, mMonth, mDay;
     private EditText date;
     private Context context;
+    private String Cpr;
 
     public Usefulmethods(EditText date,Context context){
         this.date=date;
         this.context=context;
     }
 
-    private void CalenderEdittext(){
+    public Usefulmethods(String Cpr){
+        this.Cpr=Cpr;
+    }
+
+    public void CalenderEdittext(){
         Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
@@ -47,5 +54,19 @@ public class Usefulmethods {
 
 
     }
+    public boolean ageChecker()  {
 
+            //yyyy-moth-
+            LocalDate l = LocalDate.of(Integer.valueOf("19" + Cpr.substring(4, 6)), Integer.valueOf(Cpr.substring(2, 4)), Integer.valueOf(Cpr.substring(0, 2))); //specify year, month, date directly
+            LocalDate now = LocalDate.now(); //gets localDate
+            Period diff = Period.between(l, now); //difference between the dates is calculated
+            System.out.println(diff.getYears());
+
+        if(diff.getYears() >=77){
+            return true;
+
+        }
+         return false;
+
+        }
 }

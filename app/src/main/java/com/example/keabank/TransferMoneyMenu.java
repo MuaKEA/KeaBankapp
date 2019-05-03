@@ -49,8 +49,8 @@ String Email;
                 break;
 
             case R.id.paybills:
-               // intent = new Intent(this,TransferMoneyToAccount.class);
-               // startActivity(intent);
+                intent = new Intent(this,Paybills.class);
+                startActivity(intent);
                 break;
 
             case R.id.TransferMoneyToOthers:

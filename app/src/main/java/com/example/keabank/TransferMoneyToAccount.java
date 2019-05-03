@@ -1,6 +1,6 @@
 package com.example.keabank;
 
-import android.app.DatePickerDialog;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -9,31 +9,27 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.keabank.Logic.ServerReponse;
+import com.example.keabank.Logic.Usefulmethods;
 import com.example.keabank.Model.Accounts;
-import com.example.keabank.internetConnetivity.ServerGetCall;
 import com.example.keabank.internetConnetivity.ServerPostCall;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
+
 
 public class TransferMoneyToAccount extends AppCompatActivity implements View.OnClickListener {
     Spinner FromAcc, ToAcc;
     Button SendMoney;
     EditText amount;
     String Email;
-    ArrayList<String> accountnames;
-    ArrayList<Accounts> accounts;
+    ArrayList<String> ArrayListoSpinner;
+    ArrayList<Accounts> accountobjects;
     String Tag = "TransferMoneyToAccount";
+    CheckBox checkBox;
 
 
     @Override
@@ -42,28 +38,27 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_transfer_money_to_account);
         startup();
         Getvaluesfromsharedpref();
-        try {
-            getAllAccountNames();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        getAllAccountNames();
         setupSpinner();
         SendMoney.setOnClickListener(this);
+        checkBox.setOnClickListener(this);
+
+        }
 
 
-    }
+
+
 
     private void setupSpinner() {
         FromAcc = (Spinner) findViewById(R.id.FromAccount);
         ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, accountnames);
+                android.R.layout.simple_spinner_item, ArrayListoSpinner);
         dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         FromAcc.setAdapter(dataAdapter1);
 
         ToAcc = (Spinner) findViewById(R.id.ToAccount);
         ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, accountnames);
+                android.R.layout.simple_spinner_item, ArrayListoSpinner);
         dataAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ToAcc.setAdapter(dataAdapter2);
 
@@ -75,6 +70,8 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
         ToAcc = findViewById(R.id.ToAccount);
         SendMoney = findViewById(R.id.SendMoney);
         amount = findViewById(R.id.amount);
+
+
     }
 
     private void Getvaluesfromsharedpref() {
@@ -84,42 +81,105 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
 
     }
 
-    public void getAllAccountNames() throws ExecutionException, InterruptedException {
-        accountnames = new ArrayList<>();
-        ServerGetCall serverGetCall = new ServerGetCall("/getaccounts?Email=" + Email, "getAllAccountsAndDeposit");
-        accounts = serverGetCall.execute().get();
-
-        for (int i = 0; i < accounts.size(); i++) {
-            accountnames.add(accounts.get(i).getAccountName() + " " + accounts.get(i).getAccountType() + "\navailable deposit " + accounts.get(i).getCurrentDeposit());
+    public void getAllAccountNames(){
+    ServerReponse serverReponse = new ServerReponse("/getaccounts?Email=" +Email,"haloo");
+        accountobjects=serverReponse.GetAllAccounobjects();
+        ArrayListoSpinner= new ArrayList<>();
+        for (int i = 0; i <accountobjects.size() ; i++) {
+            ArrayListoSpinner.add(accountobjects.get(i).getAccountName() +" (" +accountobjects.get(i).getAccountType() +  ")\navailable:" + accountobjects.get(i).getCurrentDeposit());
         }
 
     }
+
+
 
 
     @Override
     public void onClick(View v) {
-        Log.d(Tag,accounts.get(FromAcc.getSelectedItemPosition()).getCurrentDeposit()+" ");
-        Log.d(Tag,Double.parseDouble(amount.getText().toString()) +" ");
-        if (accounts.get(FromAcc.getSelectedItemPosition()).getCurrentDeposit() > Double.parseDouble(amount.getText().toString())) {
 
-            MakeTransActionHappen(FromAcc.getSelectedItemPosition(),ToAcc.getSelectedItemPosition());
-            Intent intent = new Intent(this,Menu.class);
-            startActivity(intent);
 
-        } else {
-            amount.setError("Not enough money");
-            Toast.makeText(this, "Not enough money please choose another amount and press send",
-                    Toast.LENGTH_LONG).show();
+        switch (v.getId()) {
+
+
+
+            case R.id.SendMoney:
+
+                if (accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountType().equals("Pension") &&  requirementschecker() && checkdeposit(accountobjects.get(FromAcc.getSelectedItemPosition()).getCurrentDeposit())) {
+                    Log.d(Tag,"pension");
+                    MakeTransActionHappen(FromAcc.getSelectedItemPosition(),ToAcc.getSelectedItemPosition());
+                    Intent intent = new Intent(this,Menu.class);
+                    startActivity(intent);
+
+                } else if (!accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountType().equals("Pension") && checkdeposit(accountobjects.get(FromAcc.getSelectedItemPosition()).getCurrentDeposit())){
+                    Log.d(Tag,"ikke pension");
+
+                    MakeTransActionHappen(FromAcc.getSelectedItemPosition(),ToAcc.getSelectedItemPosition());
+                    Intent intent =  new Intent(this,Menu.class);
+                   startActivity(intent);
+
+                }
+
+                break;
+
 
         }
 
 
     }
 
-    private void MakeTransActionHappen(int positionFromAccount,int positionToAccount) {
-        ServerPostCall serverPostCall = new ServerPostCall("/sendmoneyToOtherAccount?Email="+Email + "&TranceActionName=From Account" + accounts.get(positionFromAccount).getAccountName()+"&fromAccount="+accounts.get(positionFromAccount).getAccountName()+"&ToAccount="+accounts.get(positionToAccount).getAccountName()
-                +"&value="+amount.getText().toString()+"&sendingorReciving=true");
-        serverPostCall.execute();
+        private void MakeTransActionHappen(int positionFromAccount,int positionToAccount) {
+            ServerPostCall serverPostCall = new ServerPostCall("/sendmoneyToOtherAccount?Email="+Email + "&TranceActionName=From Account" + accountobjects.get(positionFromAccount).getAccountName()+"&fromAccount="+accountobjects.get(positionFromAccount).getAccountName()+"&ToAccount="+accountobjects.get(positionToAccount).getAccountName()
+                    +"&value="+amount.getText().toString()+"&sendingorReciving=true");
 
-    }
+            serverPostCall.execute();
+
+        }
+
+
+
+
+        public boolean requirementschecker(){
+            ServerReponse serverGetCall= new ServerReponse("/getCpr?Email="+Email,"GetCpr");
+
+            Log.d(Tag,serverGetCall.getCpr());
+
+
+
+                Usefulmethods usefulmethods = new Usefulmethods(serverGetCall.getCpr());
+
+                if(usefulmethods.ageChecker()){
+                    Log.d(Tag,usefulmethods.ageChecker() +"check age");
+                    return false;
+
+                }else {
+                     Toast.makeText(this,"you must be 77 or more to withdraw money",Toast.LENGTH_LONG).show();
+
+
+                }
+
+        return false;
+        }
+
+        public boolean checkdeposit(Double amounts) {
+        if (amounts >= Double.valueOf(amount.getText().toString())) {
+
+                return true;
+            }
+            amount.setError("Not enough money");
+            Toast.makeText(this, "Not enough money please choose another amount and press send",
+                    Toast.LENGTH_LONG).show();
+            return false;
+
+        }
 }
+
+
+
+
+
+
+
+
+
+
+

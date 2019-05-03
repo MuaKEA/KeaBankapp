@@ -9,18 +9,16 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
+import com.example.keabank.Logic.ServerReponse;
 import com.example.keabank.Model.Accounts;
-import com.example.keabank.internetConnetivity.ServerGetCall;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class ChooseAccount extends AppCompatActivity implements View.OnClickListener,MyRecyclerViewAdapter.ItemClickListener {
     MyRecyclerViewAdapter adapter;
     String Tag = "ChooseAccount";
     String Email;
     ArrayList<String> accountsNamesAndDeposit;
-    ArrayList<Accounts> accounts;
+    ArrayList<Accounts> accountsobjects;
     Button createacoount;
 
     @Override
@@ -59,20 +57,9 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
     }
 
     private void startup() {
+        createacoount = findViewById(R.id.createaccount);
 
-        createacoount=findViewById(R.id.createaccount);
-
-
-        try {
-            getAllAccountsFromServer();
-
-
-
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        getAllAccountsFromServer();
 
     }
 
@@ -87,22 +74,24 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(this,SeeTransActions.class);
-        intent.putExtra("accountname",accounts.get(position).getAccountName());
+        intent.putExtra("accountname",accountsobjects.get(position).getAccountName());
         startActivity(intent);
 
 
     }
 
-public void getAllAccountsFromServer() throws ExecutionException, InterruptedException {
+public void getAllAccountsFromServer() {
 
     accountsNamesAndDeposit= new ArrayList<>();
-    ServerGetCall getAllAccounts = new ServerGetCall("/getaccounts?Email=" + Email,"getAllAccountsAndDeposit");
-    accounts=getAllAccounts.execute().get();
+    ServerReponse getAllAccounts = new ServerReponse("/getaccounts?Email=" + Email,"getAllAccountsAndDeposit");
+    accountsobjects=getAllAccounts.GetAllAccounobjects();
 
-    for (int i = 0; i <accounts.size() ; i++) {
-        accountsNamesAndDeposit.add(accounts.get(i).getAccountName() +": " + accounts.get(i).getAccountType() +" " + accounts.get(i).getCurrentDeposit());
-    }
+    for (int i = 0; i <accountsobjects.size() ; i++) {
+        accountsNamesAndDeposit.add(accountsobjects.get(i).getAccountName() +" (" +accountsobjects.get(i).getAccountType() +  ")\navailable:" + accountsobjects.get(i).getCurrentDeposit());
+
 
     }
-    }
+     }
+
+}
 

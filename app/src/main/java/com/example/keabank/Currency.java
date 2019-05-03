@@ -43,7 +43,7 @@ public class Currency extends AppCompatActivity implements View.OnClickListener{
     }
 
     private void init() {
-        spin1 = findViewById(R.id.spinner);
+        spin1 = findViewById(R.id.spinner1);
         spin2 = findViewById(R.id.spinner2);
         calculatebutton=(Button)findViewById(R.id.currentcycal_btn);
         userinput=findViewById(R.id.userinput);

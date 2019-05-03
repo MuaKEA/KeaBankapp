@@ -3,37 +3,35 @@ package com.example.keabank.internetConnetivity;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.keabank.Model.Accounts;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
 
-public class ServerGetCall extends AsyncTask<String,String,ArrayList<Accounts>> {
-private String url;
-private String operationName;
-ArrayList<Accounts> Reponse = new ArrayList<>();
-String Tag="ServerGetCall";
 
-public ServerGetCall(String url,String operationName) {
-this.url=url;
-this.operationName=operationName;
-}
+
+
+
+public class ServerGetCall extends AsyncTask<String,String,String> {
+    private String url;
+    String Tag = "ServerGetCall";
+
+    public ServerGetCall(String url) {
+        this.url = url;
+    }
 
 
     @Override
-    protected ArrayList<Accounts> doInBackground(String... strings) {
-
-        String ip=GetServerIp.getInstance();
+    protected String doInBackground(String... strings) {
+        int responscode;
+        String ip = GetServerIp.getInstance();
         String webapiadress = ip + url;
-        String reponse="";
+       Log.d(Tag,webapiadress);
+        String reponse =null;
         URL url;
-        Log.d("ServerGetCall",operationName);
 
         try {
             url = new URL(webapiadress);
@@ -42,122 +40,29 @@ this.operationName=operationName;
             con.connect();
             BufferedReader bf = new BufferedReader(new InputStreamReader(con.getInputStream()));
             reponse = bf.readLine();
+            responscode=con.getResponseCode();
 
-
-
-            switch (operationName) {
-
-                case "ResponseCode":
-                    GetReponseCode(con.getResponseCode());
-                    break;
-
-//                case "GetAllAccountNames":
-//                    GetAllAccountNames(reponse);
-//                    break;
-
-
-                case "getAllAccountsAndDeposit":
-                    getAllAccountsAndDeposit(reponse);
-
-                    break;
-
-
-                case "GetAllTransActions":
-                    GetAllTransActions(reponse);
-
-
-
-                    break;
-
+            if(reponse==null) {
+                String s = String.valueOf(responscode);
+                Log.d(Tag, s + "<--reponsecode");
+                return s;
             }
-            } catch(Exception e){
-                e.printStackTrace();
-
-            }
-
-     return Reponse;
-    }
-
-    private void getAllAccountsAndDeposit(String reponse) {
-        Log.d(Tag,reponse);
-
-        try {
-
-
-            JSONObject myJsonResponse = new JSONObject(reponse);
-            JSONArray jsonarray = myJsonResponse.getJSONArray("accountsList");
-            for (int i = 0; i < jsonarray.length(); i++) {
-                JSONObject innerJsonObject = jsonarray.getJSONObject(i);
-                String account = innerJsonObject.getString("account");
-                double deposit = innerJsonObject.getDouble("currentdeposit");
-                String accounttype = innerJsonObject.getString("accounttype");
-                Reponse.add(new Accounts(account,deposit,accounttype));
-            }
-        } catch (JSONException e) {
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-    }
-
-//    private void GetAllAccountNames(String reponse) {
-//        try {
-//
-//
-//            JSONObject myJsonResponse = new JSONObject(reponse);
-//            JSONArray jsonarray = myJsonResponse.getJSONArray("accountsList");
-//            for (int i = 0; i < jsonarray.length(); i++) {
-//                JSONObject innerJsonObject = jsonarray.getJSONObject(i);
-//                String account = innerJsonObject.getString("account");
-//                Reponse.add(account);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-        private void GetAllTransActions(String reponse) {
-            Log.d(Tag,reponse);
-        try {
-
-            JSONObject myJsonTransActions = new JSONObject(reponse);
-            JSONArray transActions = myJsonTransActions.getJSONArray("transActions");
-
-            for (int i = 0; i < transActions.length(); i++) {
-                JSONObject innerJsonObject = transActions.getJSONObject(i);
-                String transactionName = innerJsonObject.getString("transactionName");
-                String dopositBeforeTransaction = innerJsonObject.getString("dopositBeforeTransaction");
-                String dopositAfterTransaction = innerJsonObject.getString("dopositAfterTransaction");
-                String date = innerJsonObject.getString("date");
-                boolean sendingOrreciving = innerJsonObject.getBoolean("sendingOrreciving");
-
-                if (!sendingOrreciving) {
-                    dopositBeforeTransaction = "+" + dopositBeforeTransaction;
-
-                } else {
-                    dopositBeforeTransaction = "-" + dopositBeforeTransaction;
-
-                }
-
-                Reponse.add(new Accounts(transactionName,dopositBeforeTransaction,dopositAfterTransaction,date));
-
-            }
 
 
-        } catch (Exception e) {
-            e.printStackTrace();
-
-
-        }
+       Log.d(Tag,reponse);
+        return reponse;
 
     }
-
-    private void GetReponseCode(int ReposeCode) {
-        Reponse.add(new Accounts(ReposeCode));
-       Log.d(Tag,ReposeCode+" ");
-    }
-
-
 }
+
 
 
 
