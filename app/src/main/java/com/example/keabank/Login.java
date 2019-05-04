@@ -11,13 +11,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.keabank.Logic.ServerReponse;
-import com.example.keabank.Model.Accounts;
-import com.example.keabank.internetConnetivity.ServerGetCall;
-
-
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+import com.example.keabank.Logic.ServerGetRequest;
+import com.example.keabank.Logic.ServerPostRequest;
 
 public class Login extends AppCompatActivity implements View.OnClickListener  {
     EditText Email, Password;
@@ -60,7 +55,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
             case R.id.Sign_in:
 
-                Log.d(Tag, "sign in button");
 
                    loginchecker(UsernameAndPasswordvalidation());
 
@@ -87,7 +81,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
 
       if(serverresponse.equals(200)){
-            editor.putString("username", Email.getText().toString().trim());
+          Log.d(Tag,"setting shared pref");
+          editor.putString("username", Email.getText().toString().trim());
             editor.putBoolean("checkbox",remember_Checkbox.isChecked());
             editor.apply();
             startActivity(intent);
@@ -100,10 +95,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
     public void getData() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-        String username = pref.getString("username","");
+        String username = pref.getString("username",null);
         boolean ischeckedboxchecked=pref.getBoolean("checkbox",false);
 
-        if (ischeckedboxchecked && (username != null)) {
+        if (username!=null && ischeckedboxchecked) {
             Log.d(Tag, username + "<-- username after if");
             Email.setText(username);
             remember_Checkbox.setChecked(true);
@@ -116,13 +111,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 public Integer UsernameAndPasswordvalidation()  {
 
 
-    ServerReponse serverGetCall = new ServerReponse("/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString(),"ResponseCode");
-    int respons=serverGetCall.GetReponseCode();
+    ServerPostRequest serverPostRequest = new ServerPostRequest("/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString());
 
-    if(respons>0){
-        return respons;
-    }
-    return 400 ;
+    Log.d(Tag,serverPostRequest.getReponse() +"<--Server Response");
+
+
+    return serverPostRequest.getReponse();
 }
 
 

@@ -8,7 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import com.example.keabank.Logic.ServerReponse;
+import com.example.keabank.Logic.ServerGetRequest;
 import java.util.ArrayList;
 
 
@@ -70,7 +70,7 @@ String Tag="SeeTransActions";
     private void fillArrayList()  {
 
         transActions= new ArrayList<>();
-        ServerReponse getTranstions = new ServerReponse("/AccountTransfers?Email="+Email+"&Accountname="+ accountName,"GetAllTransActions");
+        ServerGetRequest getTranstions = new ServerGetRequest("/AccountTransfers?Email="+Email+"&Accountname="+ accountName);
         transActions= getTranstions.GetAllTransActions();
 
     }

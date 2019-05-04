@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.keabank.Logic.ServerReponse;
+import com.example.keabank.Logic.ServerGetRequest;
 import com.example.keabank.Logic.Usefulmethods;
 import com.example.keabank.Model.Accounts;
 import com.example.keabank.internetConnetivity.ServerPostCall;
@@ -80,8 +80,8 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
     }
 
     public void getAllAccountNames(){
-    ServerReponse serverReponse = new ServerReponse("/getaccounts?Email=" +Email,"haloo");
-        accountobjects=serverReponse.GetAllAccounobjects();
+    ServerGetRequest serverGetRequest = new ServerGetRequest("/getaccounts?Email=" +Email);
+        accountobjects= serverGetRequest.GetAllAccounobjects();
         ArrayListoSpinner= new ArrayList<>();
         for (int i = 0; i <accountobjects.size() ; i++) {
             ArrayListoSpinner.add(accountobjects.get(i).getAccountName() +" (" +accountobjects.get(i).getAccountType() +  ")\navailable:" + accountobjects.get(i).getCurrentDeposit());
@@ -137,7 +137,7 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
 
 
         public boolean requirementschecker(){
-            ServerReponse serverGetCall= new ServerReponse("/getCpr?Email="+Email,"GetCpr");
+            ServerGetRequest serverGetCall= new ServerGetRequest("/getCpr?Email="+Email);
 
             Log.d(Tag,serverGetCall.getCpr());
 

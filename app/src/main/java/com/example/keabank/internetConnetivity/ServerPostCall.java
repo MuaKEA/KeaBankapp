@@ -8,6 +8,7 @@ import java.net.URL;
 
 public class ServerPostCall extends AsyncTask<String,String,Integer> {
 private String url;
+    String Tag ="ServerPostCall";
 
 public ServerPostCall(String url){
     this.url=url;
@@ -27,7 +28,7 @@ public ServerPostCall(String url){
             con.setRequestMethod("POST");
             con.connect();
             reponse = con.getResponseCode();
-
+            Log.d(Tag, reponse+ "<--reponsecode");
 
         } catch (Exception e) {
             e.printStackTrace();

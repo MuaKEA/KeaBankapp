@@ -2,7 +2,6 @@ package com.example.keabank.Logic;
 
 import android.util.Log;
 
-import com.example.keabank.Account;
 import com.example.keabank.Model.Accounts;
 import com.example.keabank.internetConnetivity.ServerGetCall;
 
@@ -13,11 +12,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class ServerReponse {
+public class ServerGetRequest {
 
     private String operationName;
     private String url;
-    private String Tag = "ServerReponse";
+    private String Tag = "ServerGetRequest";
     private String reponse;
 
 
@@ -27,8 +26,7 @@ public class ServerReponse {
         reponse= ContactSever(url);
     }
 
-    public ServerReponse(String url, String operationName) {
-        this.operationName = operationName;
+    public ServerGetRequest(String url) {
         this.url = url;
          execute();
     }

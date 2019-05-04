@@ -12,14 +12,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.keabank.Logic.ServerReponse;
+import com.example.keabank.Logic.ServerGetRequest;
 import com.example.keabank.Logic.Usefulmethods;
 import com.example.keabank.Model.Accounts;
-import com.example.keabank.internetConnetivity.ServerGetCall;
-import com.example.keabank.internetConnetivity.ServerPostCall;
-
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class Paybills extends AppCompatActivity implements View.OnClickListener {
     Spinner FromAccount, servicecode;
@@ -71,7 +67,7 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
         }
     public void getAllAccounts() {
         accountnames = new ArrayList<>();
-        ServerReponse getAllAccounts = new ServerReponse("/getaccounts?Email=" + Email, "getAllAccountsAndDeposit");
+        ServerGetRequest getAllAccounts = new ServerGetRequest("/getaccounts?Email=" + Email);
         accountObjecs = getAllAccounts.GetAllAccounobjects();
 
         for (int i = 0; i < accountObjecs.size(); i++) {
@@ -97,9 +93,9 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
 
                 if (checkifAccountExist()) {
 
-                    ServerReponse serverReponse = new ServerReponse("/paybill?Email=" + Email + "&TranceActionName=" + TransactionName.getText().toString() + "&fromAccount=" + accountObjecs.get(FromAccount.getSelectedItemPosition()).getAccountName() + "&value=" + ammout.getText().toString() + "&date=" + date.getText().toString() + "&sendingorReciving=" + true, " ");
+                    ServerGetRequest serverGetRequest = new ServerGetRequest("/paybill?Email=" + Email + "&TranceActionName=" + TransactionName.getText().toString() + "&fromAccount=" + accountObjecs.get(FromAccount.getSelectedItemPosition()).getAccountName() + "&value=" + ammout.getText().toString() + "&date=" + date.getText().toString() + "&sendingorReciving=" + true);
 
-                    if (serverReponse.GetReponseCode() == 200) {
+                    if (serverGetRequest.GetReponseCode() == 200) {
                         Intent Approved = new Intent(this, TransferMoneyMenu.class);
                         startActivity(Approved);
                     } else
@@ -118,8 +114,8 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
 
     private boolean checkifAccountExist() {
 
-        ServerReponse checkBill = new ServerReponse("/checkbillsexist?digits=" + servicecode.getSelectedItem().toString().substring(1) + "&accountnumber=" + accountnumber.getText().toString()
-                + "&registrationNumber=" + reg.getText().toString(), "statuschecjer");
+        ServerGetRequest checkBill = new ServerGetRequest("/checkbillsexist?digits=" + servicecode.getSelectedItem().toString().substring(1) + "&accountnumber=" + accountnumber.getText().toString()
+                + "&registrationNumber=" + reg.getText().toString());
         int reponsCode=checkBill.GetReponseCode();
 
 

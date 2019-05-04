@@ -37,17 +37,12 @@ public class Usefulmethods {
         String format = "dd-MM-yyyy";
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.GERMAN);
         DatePickerDialog datePickerDialog = new DatePickerDialog(context,
-                new DatePickerDialog.OnDateSetListener() {
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    Date dateTime = new GregorianCalendar(year, monthOfYear - 1, dayOfMonth).getTime();
+                    simpleDateFormat.format(dateTime);
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        Date dateTime = new GregorianCalendar(year, monthOfYear - 1, dayOfMonth).getTime();
-                        simpleDateFormat.format(dateTime);
+                    date.setText(simpleDateFormat.format(dateTime));
 
-                        date.setText(simpleDateFormat.format(dateTime));
-
-                    }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
 

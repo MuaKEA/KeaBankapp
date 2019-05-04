@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import com.example.keabank.Logic.ServerReponse;
+import com.example.keabank.Logic.ServerGetRequest;
 import com.example.keabank.Model.Accounts;
 import java.util.ArrayList;
 
@@ -83,7 +83,7 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
 public void getAllAccountsFromServer() {
 
     accountsNamesAndDeposit= new ArrayList<>();
-    ServerReponse getAllAccounts = new ServerReponse("/getaccounts?Email=" + Email,"getAllAccountsAndDeposit");
+    ServerGetRequest getAllAccounts = new ServerGetRequest("/getaccounts?Email=" + Email);
     accountsobjects=getAllAccounts.GetAllAccounobjects();
 
     for (int i = 0; i <accountsobjects.size() ; i++) {
