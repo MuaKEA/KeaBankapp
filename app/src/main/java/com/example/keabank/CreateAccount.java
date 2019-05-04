@@ -1,5 +1,4 @@
 package com.example.keabank;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
@@ -34,8 +33,7 @@ String Tag = "CreateAccount";
         startup();
 
         applybtn.setOnClickListener(this);
-
-            accountype.setOnItemSelectedListener(this);
+        accountype.setOnItemSelectedListener(this);
 
     }
 
@@ -57,6 +55,8 @@ String Tag = "CreateAccount";
     @Override
     public void onClick(View v) {
 
+        
+        
         if(accountype.getSelectedItem().equals("Pension")){
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
             builder1.setMessage("Pension account can only deposit money, and can only be withdrawn at the age of 77. \n press yes to create the account or press no to cancel");
@@ -64,26 +64,20 @@ String Tag = "CreateAccount";
 
             builder1.setPositiveButton(
                     "Yes",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
+                    (dialog, id) -> {
+                        dialog.cancel();
 
-                            if(saveAccount() == 200){
-                                startChooseAccountActivity();
+                        if(noEmpthyfieldschecker() && saveAccount() == 200){
+                            startChooseAccountActivity();
 
-                                }
+                            }
 
 
-                        }
                     });
 
             builder1.setNegativeButton(
                     "No",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
+                    (dialog, id) -> dialog.cancel());
 
             AlertDialog alert11 = builder1.create();
             alert11.show();
@@ -92,11 +86,23 @@ String Tag = "CreateAccount";
 
 
 
-    }else {
-        saveAccount();
+    }else if(accountype.getSelectedItem().toString().equals("Savings") || accountype.getSelectedItem().toString().equals("Budget")) {
+            saveSpecialAccount();
+    }else
+            saveAccount();
         startChooseAccountActivity();
     }
 
+    private void saveSpecialAccount() {
+    }
+
+    private boolean noEmpthyfieldschecker() {
+
+    if(accountname.getText().toString().equals("")){
+       accountname.setError("Required");
+        return false;
+    }
+    return true;
     }
 
     private void startChooseAccountActivity() {
@@ -109,9 +115,10 @@ String Tag = "CreateAccount";
 
   public int saveAccount()   {
         ServerPostCall saveaccount =  new ServerPostCall("/newAccount?Email="+Email+"&Accountname="+accountname.getText().toString()+"&AccountType=" + accountype.getSelectedItem().toString());
-
-      try {
+        try {
+        
           return saveaccount.execute().get();
+     
       } catch (ExecutionException e) {
           e.printStackTrace();
       } catch (InterruptedException e) {

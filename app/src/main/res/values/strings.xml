@@ -39,6 +39,8 @@
         <item>Monthly(Defualt)</item>
         <item>Dayli</item>
         <item>Yearly</item>
+        <item>select a date</item>
+
     </string-array>
 
     <string-array name="servicecodearray">

@@ -118,10 +118,13 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
 
     private boolean checkifAccountExist() {
 
-        ServerReponse checkBill = new ServerReponse("/checkbillsexist?digits=" + servicecode.getSelectedItem().toString() + "&accountnumber=" + accountnumber.getText().toString()
+        ServerReponse checkBill = new ServerReponse("/checkbillsexist?digits=" + servicecode.getSelectedItem().toString().substring(1) + "&accountnumber=" + accountnumber.getText().toString()
                 + "&registrationNumber=" + reg.getText().toString(), "statuschecjer");
+        int reponsCode=checkBill.GetReponseCode();
 
-        if (checkBill.GetReponseCode() == 200) {
+
+        if (reponsCode > 0) {
+            Log.d(Tag,reponsCode + " ");
             return true;
         }
 

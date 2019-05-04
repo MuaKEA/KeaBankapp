@@ -41,7 +41,6 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
         getAllAccountNames();
         setupSpinner();
         SendMoney.setOnClickListener(this);
-        checkBox.setOnClickListener(this);
 
         }
 
@@ -70,7 +69,6 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
         ToAcc = findViewById(R.id.ToAccount);
         SendMoney = findViewById(R.id.SendMoney);
         amount = findViewById(R.id.amount);
-
 
     }
 
