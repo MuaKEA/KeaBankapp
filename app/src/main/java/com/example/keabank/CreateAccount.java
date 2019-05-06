@@ -28,6 +28,7 @@ String Email;
 String Tag = "CreateAccount";
 TextView tx1,tx2;
     ArrayList<String>accountsNamesAndDeposit;
+    ArrayList<Accounts> accountsobjects;
 
 
     @Override
@@ -144,9 +145,9 @@ TextView tx1,tx2;
 
     private void saveSpecialAccount()  {
         LocalDate today = LocalDate.now();
-
+                                    //http://10.149.88.167:8888/SaveSavingsAccount?Email=altair2400@gmail.com&Accountname=haihalo&AccountType=Monthlytest&Fromaccount=Keabank&ammount=2&date=2019-05-01&automatedsetting=date
     ServerPostRequest saveaccount=new ServerPostRequest("/SaveSavingsAccount?Email="+Email + "&Accountname=" +accountname.getText().toString()+"" +"&AccountType=" + accountype.getSelectedItem().toString()+
-            "&Fromaccount="+Faccount.getSelectedItem().toString() +"&ammount=" +automatictranferamount.getText().toString() +"&date="+ today.toString()
+            "&Fromaccount="+accountsobjects.get(Faccount.getSelectedItemPosition()).getAccountName() +"&ammount=" +automatictranferamount.getText().toString() +"&date="+ today.toString()
         + "&automatedsetting=" +automatictransfer.getSelectedItem().toString());
 
 
@@ -255,7 +256,7 @@ TextView tx1,tx2;
         accountsNamesAndDeposit= new ArrayList<>();
         ServerGetRequest getAllAccounts = new ServerGetRequest("/getaccounts?Email=" + Email);
 
-        ArrayList<Accounts>accountsobjects=getAllAccounts.GetAllAccounobjects();
+       accountsobjects=getAllAccounts.GetAllAccounobjects();
         for (int i = 0; i <accountsobjects.size() ; i++) {
             accountsNamesAndDeposit.add(accountsobjects.get(i).getAccountName() +" (" +accountsobjects.get(i).getAccountType() +  ")\navailable:" + accountsobjects.get(i).getCurrentDeposit());
 

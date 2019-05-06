@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 public class ServerGetRequest {
@@ -113,12 +114,15 @@ public ArrayList<String> GetAllTransActions() {
 
         }
 
-
         } catch (Exception e) {
         e.printStackTrace();
 
 
         }
+
+
+    Log.d(Tag,transactionarrayList.toString());
+        Log.d(Tag,transactionarrayList.size() +"<-transactionarrayList size");
          return transactionarrayList;
         }
 
