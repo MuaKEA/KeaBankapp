@@ -2,13 +2,18 @@ package com.example.keabank;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import com.example.keabank.internetConnetivity.ServerPostCall;
-import java.util.concurrent.ExecutionException;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.example.keabank.Logic.ServerPostRequest;
 
 public class NewCostumer extends AppCompatActivity implements View.OnClickListener {
     Button agreementbtn;
@@ -44,22 +49,53 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
         Intent LoginActivity = new Intent(this, Login.class);
 
         if (fieldsRequidmentschecker()) {
-            try {
-                Saveuser();
-                LoginActivity.putExtra("usernmame", editTextsarray[0].getText().toString());
-                LoginActivity.putExtra("password", editTextsarray[2].getText().toString());
-                startActivity(LoginActivity);
 
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            ServerPostRequest requestConformationCode= new ServerPostRequest("/sendValidationCode?Email="+editTextsarray[0].getText().toString());
+            requestConformationCode.execute();
 
 
-        }
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = getLayoutInflater();
+            final View dialogView = inflater.inflate(R.layout.conform_email_adress, null);
+            dialogBuilder.setView(dialogView);
+            final EditText conformEmailcode = (EditText) dialogView.findViewById(R.id.conformEmail);
+            final Button createuserbtn = (Button) dialogView.findViewById(R.id.Conform_email_btn);
+            final AlertDialog dialog = dialogBuilder.create();
+            final Button backbtn= dialogView.findViewById(R.id.btn_back);
 
-    }
+
+            backbtn.setOnClickListener(v2 -> {
+
+                dialog.dismiss();
+
+            });
+
+
+            createuserbtn.setOnClickListener(v1 -> {
+                if (TextUtils.isEmpty(conformEmailcode.getText().toString())) {
+                    Toast.makeText(getApplication(), "Enter your registered email id", Toast.LENGTH_SHORT).show();
+                }
+
+
+                    ServerPostRequest serverCall = new ServerPostRequest("/createuser?fullname="+editTextsarray[1].getText().toString()+"&username="+editTextsarray[0].getText().toString() + "&Cpr=" +editTextsarray[5].getText().toString()  +"&password="+editTextsarray[2].getText().toString() + "&conformationscode=" +conformEmailcode.getText().toString() );
+
+                    if(serverCall.execute()==200){
+                        LoginActivity.putExtra("usernmame", editTextsarray[0].getText().toString());
+                        LoginActivity.putExtra("password", editTextsarray[2].getText().toString());
+                        startActivity(LoginActivity);
+                    }else {
+
+                        Toast.makeText(this, "Wrong Conformation code", Toast.LENGTH_LONG).show();
+                    }
+
+
+            });
+            dialog.show();
+
+
+       }
+
+  }
 
 
     public boolean fieldsRequidmentschecker() {
@@ -79,7 +115,6 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
         }
 
 
-        Log.d(Tag,"condition-->" +isallok);
 
         return isallok;
     }
@@ -102,11 +137,10 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
     }
 
 
-   public boolean Saveuser() throws ExecutionException, InterruptedException {
 
-       ServerPostCall serverCall = new ServerPostCall("/createuser?fullname="+editTextsarray[1].getText().toString()+"&username="+editTextsarray[0].getText().toString() + "&Cpr=" +editTextsarray[5].getText().toString()  +"&password="+editTextsarray[2].getText().toString());
-       return serverCall.execute().get().equals("200");
-   }
+
+
+
 
 }
 

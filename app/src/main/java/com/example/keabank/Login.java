@@ -2,22 +2,24 @@ package com.example.keabank;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.example.keabank.Logic.ServerGetRequest;
 import com.example.keabank.Logic.ServerPostRequest;
 
-public class Login extends AppCompatActivity implements View.OnClickListener  {
+public class Login extends AppCompatActivity implements View.OnClickListener {
     EditText Email, Password;
     CheckBox remember_Checkbox;
-    Button Login, Createuser;
+    Button Login, Createuser,forgotpasswordbtn;
     String Tag = "Login";
 
     @Override
@@ -35,18 +37,21 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
         Login.setOnClickListener(this);
         Createuser.setOnClickListener(this);
+        forgotpasswordbtn.setOnClickListener(this);
 
     }
 
     private void startup() {
-        Email = findViewById(R.id.email);
+        Email = findViewById(R.id.conformEmail);
         Createuser=findViewById(R.id.RegisterUser);
         Password = findViewById(R.id.password);
         remember_Checkbox = findViewById(R.id.Remember_me);
         Login = findViewById(R.id.Sign_in);
+        forgotpasswordbtn= findViewById(R.id.forgotpassword);
 
 
     }
+
 
     @Override
     public void onClick(View v) {
@@ -58,16 +63,74 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
                    loginchecker(UsernameAndPasswordvalidation());
 
-
-
-                break;
+                   break;
 
             case R.id.RegisterUser:
                 Intent intent = new Intent(this,NewCostumer.class);
                 startActivity(intent);
 
+                break;
+            case R.id.forgotpassword:
+
+
+                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+
+
+
+                LayoutInflater inflater = getLayoutInflater();
+
+                final View dialogView = inflater.inflate(R.layout.forgot_password, null);
+                dialogBuilder.setView(dialogView);
+
+                final EditText editEmail = (EditText) dialogView.findViewById(R.id.conformEmail);
+                final Button btnReset = (Button) dialogView.findViewById(R.id.Conform_email_btn);
+                final ProgressBar progressBar1 = (ProgressBar) dialogView.findViewById(R.id.progressBar);
+                final AlertDialog dialog = dialogBuilder.create();
+                final Button backbtn= dialogView.findViewById(R.id.btn_back);
+
+
+                backbtn.setOnClickListener(v2 -> {
+
+                    dialog.dismiss();
+
+
+
+
+                });
+
+
+                btnReset.setOnClickListener(v1 -> {
+                    if (TextUtils.isEmpty(editEmail.getText().toString())) {
+                        Toast.makeText(getApplication(), "Enter your registered email id", Toast.LENGTH_SHORT).show();
+                    }
+
+                    ServerPostRequest Emailchecker=  new ServerPostRequest("/checkemail?Email=" + editEmail.getText().toString());
+
+                    if (Emailchecker.getReponse()==200){
+                        ServerPostRequest RequestnewPassword= new ServerPostRequest("/forgotpassword?Email=" + editEmail.getText().toString());
+                           Log.d(Tag,RequestnewPassword.getReponse() + "<--RequestnewPassword");
+                        dialog.dismiss();
+                    }
+
+
+
+
+                });
+                dialog.show();
+
+                break;
+
+
         }
-    }
+
+
+        }
+
+
+
+
+
 
     public void loginchecker (Integer serverresponse){
         Intent intent = new Intent(this, Menu.class);
@@ -80,7 +143,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
 
 
-      if(serverresponse.equals(200)){
+      if(serverresponse==200){
           Log.d(Tag,"setting shared pref");
           editor.putString("username", Email.getText().toString().trim());
             editor.putBoolean("checkbox",remember_Checkbox.isChecked());
@@ -109,15 +172,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
 
 public Integer UsernameAndPasswordvalidation()  {
-
-
-    ServerPostRequest serverPostRequest = new ServerPostRequest("/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString());
-
-    Log.d(Tag,serverPostRequest.getReponse() +"<--Server Response");
-
-
-    return serverPostRequest.getReponse();
+        ServerPostRequest serverPostRequest = new ServerPostRequest("/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString());
+        serverPostRequest.execute();
+        return serverPostRequest.getReponse();
 }
+
+
 
 
 }

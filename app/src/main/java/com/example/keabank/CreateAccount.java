@@ -151,7 +151,7 @@ TextView tx1,tx2;
         + "&automatedsetting=" +automatictransfer.getSelectedItem().toString());
 
 
-    if(saveaccount.getReponse() ==200){
+    if(saveaccount.execute() ==200){
         startChooseAccountActivity();
 
     }else
@@ -197,7 +197,7 @@ TextView tx1,tx2;
   public int saveAccount()   {
         ServerPostRequest saveaccount =  new ServerPostRequest("/newAccount?Email="+Email+"&Accountname="+accountname.getText().toString()+"&AccountType=" + accountype.getSelectedItem().toString());
 
-        if(saveaccount.getReponse()!=200){
+        if(saveaccount.execute()!=200){
 
             return 400;
 

@@ -15,6 +15,10 @@
     <string name="cpr">CPR</string>
     <string name="Account">Account:</string>
     <string name="create_new_account">create new Account</string>
+    <string name="to_account">To Account</string>
+    <string name="text_to_receiver">text to receiver</string>
+    <string name="requiredwarning">Required</string>
+    <string name="account_type">Account Type</string>
 
 
     <string-array name="country_arrays">

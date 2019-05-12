@@ -28,7 +28,12 @@ public ServerPostCall(String url){
             con.setRequestMethod("POST");
             con.connect();
             reponse = con.getResponseCode();
-            Log.d(Tag, reponse+ "<--reponsecode");
+            con.disconnect();
+            if(reponse==200){
+                return reponse;
+            }else{
+                return 401;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,7 +41,7 @@ public ServerPostCall(String url){
 
         }
 
-        return reponse;
+        return null;
 
     }
 }

@@ -16,7 +16,7 @@ public class ServerPostRequest {
 
     public ServerPostRequest(String url) {
         this.url = url;
-         execute();
+
 
     }
 
@@ -30,7 +30,6 @@ public class ServerPostRequest {
         ServerPostCall serverGetCall = new ServerPostCall(url);
         try {
             reponse=serverGetCall.execute().get();
-            Log.d(Tag,reponse.toString());
 
 
         } catch (ExecutionException e) {

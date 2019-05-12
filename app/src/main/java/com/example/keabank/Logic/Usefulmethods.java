@@ -35,11 +35,10 @@ public class Usefulmethods {
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
         String format = "dd-MM-yyyy";
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.GERMAN);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.GERMAN);
         DatePickerDialog datePickerDialog = new DatePickerDialog(context,
                 (view, year, monthOfYear, dayOfMonth) -> {
                     Date dateTime = new GregorianCalendar(year, monthOfYear - 1, dayOfMonth).getTime();
-                    simpleDateFormat.format(dateTime);
 
                     date.setText(simpleDateFormat.format(dateTime));
 
@@ -49,9 +48,9 @@ public class Usefulmethods {
 
 
     }
+
     public boolean ageChecker()  {
 
-            //yyyy-moth-
             LocalDate l = LocalDate.of(Integer.valueOf("19" + Cpr.substring(4, 6)), Integer.valueOf(Cpr.substring(2, 4)), Integer.valueOf(Cpr.substring(0, 2))); //specify year, month, date directly
             LocalDate now = LocalDate.now(); //gets localDate
             Period diff = Period.between(l, now); //difference between the dates is calculated

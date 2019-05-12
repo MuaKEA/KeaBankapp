@@ -8,9 +8,7 @@ import com.example.keabank.internetConnetivity.ServerGetCall;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 public class ServerGetRequest {
@@ -31,35 +29,6 @@ public class ServerGetRequest {
         this.url = url;
          execute();
     }
-
-    public ArrayList<String> getAllAccountsAndDeposit() {
-        ArrayList<String> getallaccountsArrayList = new ArrayList<>();
-
-        Log.d(Tag, reponse);
-
-
-        try {
-            JSONObject myJsonResponse = new JSONObject(reponse);
-            JSONArray jsonarray = myJsonResponse.getJSONArray("accountsList");
-            for (int i = 0; i < jsonarray.length(); i++) {
-                JSONObject innerJsonObject = jsonarray.getJSONObject(i);
-                String account = innerJsonObject.getString("account");
-                double deposit = innerJsonObject.getDouble("currentdeposit");
-                String accounttype = innerJsonObject.getString("accounttype");
-                getallaccountsArrayList.add(account + " " + deposit + " " + accounttype);
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        }
-        return getallaccountsArrayList;
-
-    }
-
-
-
 
 
     public ArrayList<Accounts> GetAllAccounobjects() {
@@ -85,7 +54,8 @@ public class ServerGetRequest {
     return accoutname;
     }
 
-public ArrayList<String> GetAllTransActions() {
+
+    public ArrayList<String> GetAllTransActions() {
         ArrayList<String> transactionarrayList= new ArrayList<>();
 
         Log.d(Tag,reponse);
@@ -121,19 +91,13 @@ public ArrayList<String> GetAllTransActions() {
         }
 
 
-    Log.d(Tag,transactionarrayList.toString());
+        Log.d(Tag,transactionarrayList.toString());
         Log.d(Tag,transactionarrayList.size() +"<-transactionarrayList size");
          return transactionarrayList;
         }
 
-    public int GetReponseCode() {
-    Log.d(Tag,reponse);
-            return Integer.valueOf(reponse);
-        }
 
-
-
-    public String getCpr()  {
+        public String getCpr()  {
         JSONObject myJsonaccounttype;
         String cpr="";
 
@@ -149,7 +113,7 @@ public ArrayList<String> GetAllTransActions() {
     }
 
 
-public String ContactSever(String url){
+    private String ContactSever(String url){
     String reponse="";
         ServerGetCall serverGetCall = new ServerGetCall(url);
     try {
