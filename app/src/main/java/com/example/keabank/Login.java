@@ -16,8 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.example.keabank.Logic.ServerPostRequest;
 import com.example.keabank.Logic.TransactionsManager;
-
-import static com.example.keabank.Logic.TransactionsManager.startTransactions;
+import static com.example.keabank.Logic.TransactionsManager.getinstance;
 
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
@@ -32,8 +31,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_login);
         startup();
         getData();
-        startTransactions(this);
-
+        starttransactions();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             Email.setText(extras.getString("usernmame"));
@@ -43,6 +41,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         Createuser.setOnClickListener(this);
         forgotpasswordbtn.setOnClickListener(this);
 
+    }
+
+    private void starttransactions() {
+    TransactionsManager transactionsManager=getinstance(this);
+    transactionsManager.startTransactions();
     }
 
     private void startup() {

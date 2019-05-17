@@ -21,31 +21,21 @@ public class TransactionsManager {
     private Context context;
 
 
-    private TransactionsManager(Context context){
-        this.context=context;
-    }
+
 
     private TransactionsManager(){
     }
 
-    private TransactionsManager transactionsManager= new TransactionsManager();
-
-
-
-
+    private static TransactionsManager transactionsManager= new TransactionsManager();
 
 
     public void startTransactions() {
 
         final FileInputStream[] fileInputStream = new FileInputStream[1];
-        while (true) {
-            Thread transactionsthread = new Thread(() -> {
+
+
 
                 try {
-
-                    fileExists();
-
-
                         fileInputStream[0] = context.openFileInput("myfile.txt");
                         InputStreamReader isr = new InputStreamReader(fileInputStream[0]);
                         BufferedReader bufferedReader = new BufferedReader(isr);
@@ -96,10 +86,6 @@ public class TransactionsManager {
                     e.printStackTrace();
                 }
 
-
-            });
-            transactionsthread.start();
-        }
     }
 
     public  boolean fileExists() {
@@ -120,8 +106,8 @@ public class TransactionsManager {
         return true;
     }
 
-    public TransactionsManager getinstance(Context context){
-
+    public static TransactionsManager getinstance(Context context){
+        transactionsManager.setContext(context);
         return transactionsManager;
 
     }
