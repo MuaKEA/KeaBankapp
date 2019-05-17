@@ -44,8 +44,11 @@ public class ServerGetRequest {
                 String account = innerJsonObject.getString("account");
                 double currentdeposit = innerJsonObject.getDouble("currentdeposit");
                 String accounttype = innerJsonObject.getString("accounttype");
+                Long accountNumber = innerJsonObject.getLong("accountNumber");
+                Long registrationnumber = innerJsonObject.getLong("registrationnumber");
+
                  Log.d(Tag,account + " " + currentdeposit + " " + accounttype);
-                accoutname.add(new Accounts(account,currentdeposit,accounttype));
+                accoutname.add(new Accounts(account,currentdeposit,accounttype,accountNumber,registrationnumber));
             }
         } catch (JSONException e) {
             e.printStackTrace();

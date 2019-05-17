@@ -1,22 +1,44 @@
 package com.example.keabank.Model;
 
+import java.time.LocalDate;
+
 public class Transactions {
     private String transactionName;
-    private String dopositBeforeTransaction;
-    private String dopositAfterTransaction;
+    private String message;
+    private Long FromReg;
+    private Long fromAccountNumer;
+    private Long ToReg;
+    private Long toAccountNumer;
     private String date;
-    private double transactionAmmount;
+    private String transactionAmmount;
+
 
     public Transactions() {
 
     }
 
-    public Transactions(String transactionName, double transactionAmmount, String dopositAfterTransaction, String date) {
+    public Transactions(String transactionName, Long fromReg, Long fromAccountNumer, Long toReg, Long toAccountNumer, String date, String transactionAmmount) {
         this.transactionName = transactionName;
-        this.transactionAmmount = transactionAmmount;
-        this.dopositAfterTransaction = dopositAfterTransaction;
+        this.FromReg = fromReg;
+        this.fromAccountNumer = fromAccountNumer;
+        this.ToReg = toReg;
+        this.toAccountNumer = toAccountNumer;
         this.date = date;
+        this.transactionAmmount = transactionAmmount;
     }
+
+    public Transactions(String transactionName,String message ,Long fromReg, Long fromAccountNumer, Long toReg, Long toAccountNumer, String date, String transactionAmmount) {
+        this.transactionName = transactionName;
+        this.message= message;
+        this.FromReg = fromReg;
+        this.fromAccountNumer = fromAccountNumer;
+        this.ToReg = toReg;
+        this.toAccountNumer = toAccountNumer;
+        this.date = date;
+        this.transactionAmmount = transactionAmmount;
+    }
+
+
 
     public String getTransactionName() {
         return transactionName;
@@ -26,20 +48,36 @@ public class Transactions {
         this.transactionName = transactionName;
     }
 
-    public String getDopositBeforeTransaction() {
-        return dopositBeforeTransaction;
+    public Long getFromReg() {
+        return FromReg;
     }
 
-    public void setDopositBeforeTransaction(String dopositBeforeTransaction) {
-        this.dopositBeforeTransaction = dopositBeforeTransaction;
+    public void setFromReg(Long fromReg) {
+        FromReg = fromReg;
     }
 
-    public String getDopositAfterTransaction() {
-        return dopositAfterTransaction;
+    public Long getFromAccountNumer() {
+        return fromAccountNumer;
     }
 
-    public void setDopositAfterTransaction(String dopositAfterTransaction) {
-        this.dopositAfterTransaction = dopositAfterTransaction;
+    public void setFromAccountNumer(Long fromAccountNumer) {
+        this.fromAccountNumer = fromAccountNumer;
+    }
+
+    public Long getToReg() {
+        return ToReg;
+    }
+
+    public void setToReg(Long toReg) {
+        ToReg = toReg;
+    }
+
+    public Long getToAccountNumer() {
+        return toAccountNumer;
+    }
+
+    public void setToAccountNumer(Long toAccountNumer) {
+        this.toAccountNumer = toAccountNumer;
     }
 
     public String getDate() {
@@ -50,16 +88,37 @@ public class Transactions {
         this.date = date;
     }
 
-    public double getTransactionAmmount() {
+    public String getTransactionAmmount() {
         return transactionAmmount;
     }
 
-    public void setTransactionAmmount(double transactionAmmount) {
+    public void setTransactionAmmount(String transactionAmmount) {
         this.transactionAmmount = transactionAmmount;
+
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 
-
-
+    @Override
+    public String toString() {
+        return "Transactions{" +
+                "transactionName='" + transactionName + '\'' +
+                ", message='" + message + '\'' +
+                ", FromReg=" + FromReg +
+                ", fromAccountNumer=" + fromAccountNumer +
+                ", ToReg=" + ToReg +
+                ", toAccountNumer=" + toAccountNumer +
+                ", date='" + date + '\'' +
+                ", transactionAmmount='" + transactionAmmount + '\'' +
+                '}';
+    }
 }
+
 

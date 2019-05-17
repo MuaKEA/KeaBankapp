@@ -2,7 +2,6 @@ package com.example.keabank;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,9 +21,12 @@ import com.example.keabank.Logic.ServerGetRequest;
 import com.example.keabank.Logic.ServerPostRequest;
 import com.example.keabank.Logic.Usefulmethods;
 import com.example.keabank.Model.Accounts;
+import com.example.keabank.Model.Transactions;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Objects;
+import static com.example.keabank.Logic.SavingAndReadingFiles.saveToFile;
 
 public class Paybills extends AppCompatActivity implements View.OnClickListener {
     Spinner FromAccount, serialnumber;
@@ -65,7 +67,10 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
         date = findViewById(R.id.date);
         txtToReceiver=findViewById(R.id.txtToReceiver);
         pbscheckbox=findViewById(R.id.pbscheckbox);
+
         editTextsArray= new EditText[]{TransactionName, ammout, txtToReceiver, date, reg, accountnumber};
+
+
     }
 
     private void setupSpinner() {
@@ -108,11 +113,12 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
 
 
 
-                if (checkemptyfields() && checkifAccountExist()) {
+                if (checkemptyfields() && checkifBillExist()) {
 
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
                     LayoutInflater inflater = getLayoutInflater();
                     View dialogView = inflater.inflate(R.layout.nemidvalidation_fragment, null);
+                    dialogView.measure(400,600);
                     dialogView.findViewById(R.id.date).setVisibility(View.VISIBLE);
                     dialogView.findViewById(R.id.datetosend).setVisibility(View.VISIBLE);
                     dialogView.findViewById(R.id.pbsSetting).setVisibility(View.VISIBLE);
@@ -126,7 +132,7 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
                     TextView amount = dialogView.findViewById(R.id.amount);
                     TextView exitdialog = dialogView.findViewById(R.id.exit_btn);
                     TextView pbs = dialogView.findViewById(R.id.pbsSetting);
-                    TextView date = dialogView.findViewById(R.id.datetosend);
+                    TextView datetosend = dialogView.findViewById(R.id.datetosend);
                     EditText conformationCode = dialogView.findViewById(R.id.conformationCode);
 
                     Button SendMoneyBtn = dialogView.findViewById(R.id.SendMoneyBtn);
@@ -137,8 +143,12 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
                     registrationnumber.setText(reg.getText().toString());
                     txtToreceiver.setText(txtToReceiver.getText().toString());
                     amount.setText(ammout.getText().toString());
-                    pbs.setText(pbscheckbox.getText().toString());
+
+                    datetosend.setText(date.getText().toString());
+                    pbs.setText(pbscheckbox.isChecked() +"");
                     date.setText(date.getText().toString());
+                    Log.d(Tag,date.getText().toString() + "<--- this is the date");
+
                     AlertDialog dialog = dialogBuilder.create();
 
 
@@ -151,13 +161,37 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
                             conformationCode.setError("Required");
                             Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
 
+
+
+
                         } else {
 
-                            ServerPostRequest paymoneybill = new ServerPostRequest("/paybill?Email=" + Email + "&TranceActionName=" + TransactionName.getText().toString() + "&fromAccount=" + accountObjecs.get(FromAccount.getSelectedItemPosition()).getAccountName() + "&accountnumber=" + accountnumber.getText().toString()
-                                    + "&registrationNumber=" + reg.getText().toString() + "&value=" + ammout.getText().toString() + "&date=" + date.getText().toString() + "&pbs=" + pbscheckbox.isChecked() + "&servicecode=" + conformationCode.getText().toString());
+                            ServerPostRequest checkserviceCode = new ServerPostRequest("/ServiceCodechecker?Email=" + Email +"&servicecode=" + conformationCode.getText().toString());
+                            checkserviceCode.execute();
+
+                            if (checkserviceCode.getReponse() == 200) {
+
+                                Transactions transaction =new Transactions(TransactionName.getText().toString(),accountObjecs.get(FromAccount.getSelectedItemPosition()).getRegistrationnumber(),accountObjecs.get(FromAccount.getSelectedItemPosition()).getAccountNumber(),Long.valueOf(editTextsArray[4].getText().toString()),Long.valueOf(editTextsArray[4].getText().toString()) ,date.getText().toString(),amount.getText().toString());
+                                saveToFile(this,transaction);
+
+                                if(pbscheckbox.isChecked()){
+
+                                    LocalDate fromthefirstofmonth = LocalDate.of(Integer.valueOf(date.getText().toString().substring(0,4)), Integer.valueOf(date.getText().toString().substring(5, 7)),1);
 
 
-                            if (paymoneybill.execute() == 200) {
+
+                                    for (int j = 1; j <12 ; j++) {
+
+                                        LocalDate paybillinthefurture = fromthefirstofmonth.plus(j, ChronoUnit.MONTHS);
+                                        Transactions transactionpbs =new Transactions(TransactionName.getText().toString(),accountObjecs.get(FromAccount.getSelectedItemPosition()).getRegistrationnumber(),accountObjecs.get(FromAccount.getSelectedItemPosition()).getAccountNumber(),Long.valueOf(editTextsArray[4].getText().toString()),Long.valueOf(editTextsArray[4].getText().toString()) ,paybillinthefurture.toString(),amount.getText().toString());
+                                        saveToFile(this,transactionpbs);
+
+                                    }
+
+
+
+                                }
+
                                 Intent transationsactivity = new Intent(this, TransferMoneyMenu.class);
                                 startActivity(transationsactivity);
 
@@ -173,6 +207,7 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
 
                     });
                     dialog.show();
+
 
                 }
 
@@ -191,11 +226,11 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
 
 
 
-    private boolean checkifAccountExist() {
+    private boolean checkifBillExist() {
 
         ServerPostRequest checkBill = new ServerPostRequest("/checkbillsexist?digits=" + serialnumber.getSelectedItem().toString().substring(1) + "&accountnumber=" + accountnumber.getText().toString()
                 + "&registrationNumber=" + reg.getText().toString());
-
+        checkBill.execute();
 
         if (checkBill.getReponse() == 200) {
             Log.d(Tag, checkBill.getReponse().toString());
@@ -223,5 +258,9 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
        }
        return true;
    }
+
+
+
+
 
 }

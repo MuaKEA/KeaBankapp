@@ -27,17 +27,15 @@ EditText accountname,automatictranferamount;
 String Email;
 String Tag = "CreateAccount";
 TextView tx1,tx2;
-    ArrayList<String>accountsNamesAndDeposit;
-    ArrayList<Accounts> accountsobjects;
+ArrayList<String>accountsNamesAndDeposit;
+ArrayList<Accounts> accountsobjects;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
-
         Getvaluesfromsharedpref();
-
         startup();
         getAllAccountsFromServer();
         statusOnarrayList();
@@ -76,6 +74,7 @@ TextView tx1,tx2;
                 android.R.layout.simple_spinner_item, accountsNamesAndDeposit);
         dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Faccount.setAdapter(dataAdapter1);
+
     }
 
 
@@ -89,8 +88,6 @@ TextView tx1,tx2;
     @Override
     public void onClick(View v) {
 
-        
-        
         if(accountype.getSelectedItem().equals("Pension")){
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
             builder1.setMessage("Pension account can only deposit money, and can only be withdrawn at the age of 77. \n press yes to create the account or press no to cancel");
@@ -193,15 +190,9 @@ TextView tx1,tx2;
 
     }
 
-
-  public int saveAccount()   {
+    public int saveAccount()   {
         ServerPostRequest saveaccount =  new ServerPostRequest("/newAccount?Email="+Email+"&Accountname="+accountname.getText().toString()+"&AccountType=" + accountype.getSelectedItem().toString());
-
-        if(saveaccount.execute()!=200){
-
-            return 400;
-
-        }
+        saveaccount.execute();
 
 
           return saveaccount.getReponse();
@@ -211,8 +202,7 @@ TextView tx1,tx2;
 
   }
 
-
-    @Override
+  @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Object item = parent.getItemAtPosition(position);
 
@@ -223,7 +213,6 @@ TextView tx1,tx2;
 
     }else
         makeitemsGone();
-
     }
 
     @Override

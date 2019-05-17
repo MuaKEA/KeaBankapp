@@ -1,12 +1,14 @@
 package com.example.keabank;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +23,10 @@ import com.example.keabank.Logic.ServerGetRequest;
 import com.example.keabank.Logic.ServerPostRequest;
 import com.example.keabank.Logic.Usefulmethods;
 import com.example.keabank.Model.Accounts;
-import com.example.keabank.internetConnetivity.ServerPostCall;
+import com.example.keabank.Model.Transactions;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import static com.example.keabank.Logic.SavingAndReadingFiles.saveToFile;
 
 
 public class TransferMoneyToAccount extends AppCompatActivity implements View.OnClickListener {
@@ -96,13 +100,7 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
 
     @Override
     public void onClick(View v) {
-
-
-        switch (v.getId()) {
-
-            case R.id.SendMoney:
-
-                if (accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountType().equals("Pension") &&  requirementschecker() && checkdeposit(accountobjects.get(FromAcc.getSelectedItemPosition()).getCurrentDeposit())) {
+        if (accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountType().equals("Pension") &&  requirementschecker() && checkdeposit(accountobjects.get(FromAcc.getSelectedItemPosition()).getCurrentDeposit())) {
 
                     ServerPostRequest sendconformationcode = new ServerPostRequest("/sendserviceCode?Email="+Email);
                     sendconformationcode.execute();
@@ -149,22 +147,12 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
 
                         }else {
 
-                            ServerPostRequest checkconformationcode = new ServerPostRequest("/servicecodechecker?Email=" + Email + "&ServiceCode=" + conformationCode.getText().toString());
+                           MakeTransActionHappen();
 
-
-                            if (checkconformationcode.execute() == 200) {
-                                Intent transationsactivity = new Intent(this, TransferMoneyMenu.class);
-                                startActivity(transationsactivity);
-
-                            } else {
-                                Toast.makeText(this, "Error: Wrong conformations code", Toast.LENGTH_LONG).show();
-                                conformationCode.setError("Wrong Code");
 
 
                             }
 
-
-                        }
                     });
                     dialog.show();
 
@@ -178,19 +166,17 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
 
                 }
 
-                break;
+
 
 
         }
 
 
-    }
+
 
         private void MakeTransActionHappen() {
-            ServerPostCall serverPostCall = new ServerPostCall("/sendmoneyToOtherAccount?Email="+Email + "&TranceActionName=From Account" + accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountName()+"&fromAccount="+accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountName()+"&ToAccount="+accountobjects.get(ToAcc.getSelectedItemPosition()).getAccountName()
-                    +"&value="+amount.getText().toString()+"&sendingorReciving=true");
-
-            serverPostCall.execute();
+            Transactions transaction =  new Transactions("hallo",accountobjects.get(FromAcc.getSelectedItemPosition()).getRegistrationnumber(),accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountNumber(),accountobjects.get(ToAcc.getSelectedItemPosition()).getRegistrationnumber(),accountobjects.get(ToAcc.getSelectedItemPosition()).getAccountNumber(), LocalDate.now().toString(),amount.getText().toString());
+            saveToFile(this,transaction);
 
         }
 
@@ -230,6 +216,11 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
             return false;
 
         }
+
+
+
+
+
 }
 
 

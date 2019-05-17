@@ -1,6 +1,9 @@
 package com.example.keabank;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,15 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.keabank.Logic.ServerPostRequest;
+import java.io.IOException;
+import java.util.List;
 
 public class NewCostumer extends AppCompatActivity implements View.OnClickListener {
     Button agreementbtn;
     EditText[] editTextsarray;
     String Tag = "NewCostumer";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +44,70 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
                 (EditText) findViewById(R.id.Password),
                 (EditText) findViewById(R.id.Conformpassword),
                 (EditText) findViewById(R.id.signment),
-                (EditText) findViewById(R.id.CPR)};
+                (EditText) findViewById(R.id.CPR),
+                (EditText) findViewById(R.id.Adress)};
 
 
     }
+
+
+    public float getposition(){
+
+        double addressLatitude=0.0;
+        double  addressLong=0.0;
+        double keaodenseLat =10.369008; //næshovedvej 1 odense
+        double keaodenseLong = 55.41637;
+        double keacpbLat =12.49111176; //brønshøj cph
+        double keacphLong=55.70545033;
+
+
+        if(Geocoder.isPresent()){
+            try {
+                String location = editTextsarray[6].getText().toString(); //her definere vi længde og bredegrad
+                Geocoder gc = new Geocoder(this); //A class for handling geocoding and reverse geocoding
+                List<Address> addresses= gc.getFromLocationName(location, 5); // get the found Address Objects
+
+                for(Address a : addresses){
+                    if(a.hasLatitude() && a.hasLongitude()){ //hvis responsen har Latitude og Logubtude
+                        addressLong= a.getLongitude(); // gemmer bredegrad
+                        addressLatitude= a.getLatitude(); // gemmer længdegrad
+
+                        }
+                }
+            } catch (IOException e) {
+                // handle the exception
+            }
+        }
+
+        float[] resultsforcph = new float[1];
+        Location.distanceBetween(keacpbLat, keacphLong,
+                addressLong, addressLatitude, resultsforcph);
+        float distancetocph = resultsforcph[0] /1000f;
+
+
+
+        float[] resultsforodense = new float[1];
+        Location.distanceBetween(keaodenseLat, keaodenseLong,
+                addressLong, addressLatitude, resultsforodense);
+        float distancetodense = resultsforodense[0] /1000f;
+
+
+  if (distancetocph < distancetodense){
+      Log.d(Tag,distancetocph + "<--distanse to cph");
+
+      return distancetocph;
+  }
+
+        Log.d(Tag,distancetodense  + "<--distanse to odense");
+
+        return distancetodense;
+    }
+
+
+
+
+
+
 
     @Override
     public void onClick(View v) {
@@ -94,7 +159,7 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
 
 
        }
-
+        getposition();
   }
 
 
@@ -134,6 +199,8 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
         Log.d(Tag,"emptyfieldschecker-->"+check);
 
         return check;
+
+
     }
 
 

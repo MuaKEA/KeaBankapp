@@ -15,6 +15,10 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.example.keabank.Logic.ServerPostRequest;
+import com.example.keabank.Logic.TransactionsManager;
+
+import static com.example.keabank.Logic.TransactionsManager.startTransactions;
+
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
     EditText Email, Password;
@@ -28,7 +32,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_login);
         startup();
         getData();
-
+        startTransactions(this);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -49,7 +53,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         Login = findViewById(R.id.Sign_in);
         forgotpasswordbtn= findViewById(R.id.forgotpassword);
 
-
+        Password.setText("12345");
     }
 
 

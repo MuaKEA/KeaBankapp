@@ -17,10 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.keabank.Logic.ServerGetRequest;
 import com.example.keabank.Logic.ServerPostRequest;
+import com.example.keabank.Logic.Usefulmethods;
 import com.example.keabank.Model.Accounts;
+import com.example.keabank.Model.Transactions;
 
 import java.util.ArrayList;
 import java.util.Objects;
+
+import static com.example.keabank.Logic.SavingAndReadingFiles.saveToFile;
 
 public class SendMoneyToOthers extends AppCompatActivity implements View.OnClickListener {
 Spinner accountSpinner;
@@ -29,9 +33,8 @@ Spinner accountSpinner;
     private String Email;
     private String Tag="SendMoneyToOthers";
     Spinner fromaccoutspinner;
-    EditText registrationNumber,AccNumber,edittextAmount,txtToreciever;
+    EditText registrationNumber,AccNumber,edittextAmount,txtToreciever,date,transactionName;
     Button sendmoney;
-
 
 
 
@@ -47,6 +50,7 @@ Spinner accountSpinner;
 
 
   sendmoney.setOnClickListener(this);
+  date.setOnClickListener(this);
 
     }
 
@@ -57,8 +61,10 @@ Spinner accountSpinner;
     AccNumber=findViewById(R.id.AccNumber);
     sendmoney=findViewById(R.id.sendmoney);
     txtToreciever=findViewById(R.id.txtToreciever);
+    transactionName =findViewById(R.id.transactionName);
+    date=findViewById(R.id.edittext_date);
 
-        registrationNumber.setText("4444");
+    registrationNumber.setText("4444");
         AccNumber.setText("4444563282");
     }
 
@@ -91,6 +97,11 @@ Spinner accountSpinner;
     @Override
     public void onClick(View v) {
 
+
+        switch (v.getId()){
+
+
+            case R.id.sendmoney:
             if(isfieldsvaild() && checkdeposit()){
                 ServerPostRequest sendconformationcode = new ServerPostRequest("/sendserviceCode?Email="+Email);
                 sendconformationcode.execute();
@@ -138,12 +149,13 @@ Spinner accountSpinner;
 
                 SendMoneyBtn.setOnClickListener(v2 -> {
 
-
-
-                     ServerPostRequest serverPostRequest = new ServerPostRequest("/sendtootherusers" + "/?Email="+ Email + "&texttoreciver" + txtToreciever.getText().toString() + "&Fromaccout=" +accountobjects.get(fromaccoutspinner.getSelectedItemPosition()).getAccountName() +"&Fromatype="
-                     + accountobjects.get(fromaccoutspinner.getSelectedItemPosition()).getAccountType() +"&reg=" + registrationNumber.getText().toString() + "&accountnb=" + AccNumber.getText().toString() +"&ammount=" + edittextAmount.getText().toString() + "&servicecode=" +conformationCode.getText().toString());
-
+                    ServerPostRequest serverPostRequest = new ServerPostRequest("/accountchecker?reg="+ registrationNumber.getText().toString()+"&accountnumber=" + AccNumber.getText().toString());
                         if(serverPostRequest.execute()==200){
+
+                            Transactions transactionpbs =new Transactions(transactionName.getText().toString(),accountobjects.get(fromaccoutspinner.getSelectedItemPosition()).getRegistrationnumber(),accountobjects.get(fromaccoutspinner.getSelectedItemPosition()).getAccountNumber(),Long.valueOf(registrationNumber.getText().toString()),Long.valueOf(AccNumber.getText().toString()) ,date.getText().toString(),amount.getText().toString());
+                            saveToFile(this,transactionpbs);
+
+
                             Intent transationsactivity = new Intent(this,TransferMoneyMenu.class);
                             startActivity(transationsactivity);
 
@@ -163,10 +175,15 @@ Spinner accountSpinner;
                 }else
                     Toast.makeText(this,"something went wrong try again later",Toast.LENGTH_SHORT).show();
 
+                break;
 
+            case R.id.date:
+                Usefulmethods calender = new Usefulmethods(date, this);
+                calender.CalenderEdittext();
+                break;
 
-            }
-
+        }
+    }
 
 
 

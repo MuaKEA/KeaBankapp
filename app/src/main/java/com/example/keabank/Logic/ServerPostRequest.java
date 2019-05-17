@@ -1,8 +1,6 @@
 package com.example.keabank.Logic;
 
-import android.util.Log;
 
-import com.example.keabank.internetConnetivity.ServerGetCall;
 import com.example.keabank.internetConnetivity.ServerPostCall;
 
 import java.util.concurrent.ExecutionException;
@@ -19,11 +17,6 @@ public class ServerPostRequest {
 
 
     }
-
-
-
-
-
 
     public Integer execute(){
 
