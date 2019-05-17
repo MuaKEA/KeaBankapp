@@ -5,41 +5,24 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-
+import static com.example.keabank.Logic.SavingAndReadingFiles.readFileInternalStorage;
 import static com.example.keabank.Logic.SavingAndReadingFiles.updatefile;
+
 
 public class TransactionsManager {
     private static String Tag = "TransactionsManager";
-    private Context context;
 
 
 
 
-    private TransactionsManager(){
-    }
+    public static void startTransactions(Context context) {
 
-    private static TransactionsManager transactionsManager= new TransactionsManager();
+        
+        try {
 
-
-    public void startTransactions() {
-
-        final FileInputStream[] fileInputStream = new FileInputStream[1];
-
-
-
-                try {
-                        fileInputStream[0] = context.openFileInput("myfile.txt");
-                        InputStreamReader isr = new InputStreamReader(fileInputStream[0]);
-                        BufferedReader bufferedReader = new BufferedReader(isr);
-                        JSONArray jsonArray = new JSONArray(bufferedReader.readLine());
+                        JSONArray jsonArray = readFileInternalStorage(context);
 
                         for (int i = 0; i < jsonArray.length(); i++) {
 
@@ -64,6 +47,7 @@ public class TransactionsManager {
 
 
                                 if (transfermoney.execute() == 200) {
+                                    updatefile(context, jsonArray);
 
                                     jsonArray.remove(i);
                                 }
@@ -71,53 +55,14 @@ public class TransactionsManager {
 
 
                         }
-                        updatefile(context, jsonArray);
-                        Thread.sleep(60000);
 
 
 
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+
                 } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
     }
 
-    public  boolean fileExists() {
-        File file = context.getFileStreamPath("myfile.txt");
-        if(file == null || !file.exists()) {
-
-
-            try {
-               context.openFileOutput("myfile.txt",Context.MODE_PRIVATE);
-
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            Log.d(Tag,"filedoesnt exist");
-            return false;
-        }
-        return true;
-    }
-
-    public static TransactionsManager getinstance(Context context){
-        transactionsManager.setContext(context);
-        return transactionsManager;
-
-    }
-
-
-    public Context getContext() {
-        return context;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
-    }
 }

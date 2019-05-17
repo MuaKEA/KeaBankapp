@@ -5,12 +5,11 @@ import android.util.Log;
 
 import com.example.keabank.Model.Transactions;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,17 +23,22 @@ private static String Tag="SavingAndReadingFiles";
     public static JSONArray readFileInternalStorage(Context context) {
         FileInputStream fileInputStream;
 
-
         try {
+
+            File file = context.getFileStreamPath("myfile.txt");
+            if(file == null || !file.exists()) {
+                Log.d(Tag,"file doesnt exist");
+
+                JSONArray jsonArray= new JSONArray();
+                updatefile(context,jsonArray);
+                return new JSONArray();
+            }
+
             fileInputStream = context.openFileInput("myfile.txt");
             InputStreamReader isr = new InputStreamReader(fileInputStream);
             BufferedReader bufferedReader = new BufferedReader(isr);
-
             JSONArray jsonArray= new JSONArray(bufferedReader.readLine());
             Log.d(Tag,jsonArray.toString() + "<---reading JsonArray");
-
-
-
 
 
             return jsonArray;

@@ -16,7 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.example.keabank.Logic.ServerPostRequest;
 import com.example.keabank.Logic.TransactionsManager;
-import static com.example.keabank.Logic.TransactionsManager.getinstance;
+
+import static com.example.keabank.Logic.TransactionsManager.startTransactions;
 
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
@@ -44,8 +45,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void starttransactions() {
-    TransactionsManager transactionsManager=getinstance(this);
-    transactionsManager.startTransactions();
+        startTransactions(this);
     }
 
     private void startup() {
