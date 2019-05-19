@@ -51,7 +51,7 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
     }
 
 
-    public float getposition(){
+    public String getnearestbank(){
 
         double addressLatitude=0.0;
         double  addressLong=0.0;
@@ -95,12 +95,12 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
   if (distancetocph < distancetodense){
       Log.d(Tag,distancetocph + "<--distanse to cph");
 
-      return distancetocph;
+      return "CPH";
   }
 
         Log.d(Tag,distancetodense  + "<--distanse to odense");
 
-        return distancetodense;
+        return "ODE";
     }
 
 
@@ -142,7 +142,7 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
                 }
 
 
-                    ServerPostRequest serverCall = new ServerPostRequest("/createuser?fullname="+editTextsarray[1].getText().toString()+"&username="+editTextsarray[0].getText().toString() + "&Cpr=" +editTextsarray[5].getText().toString()  +"&password="+editTextsarray[2].getText().toString() + "&conformationscode=" +conformEmailcode.getText().toString() );
+                    ServerPostRequest serverCall = new ServerPostRequest("/createuser?fullname="+editTextsarray[1].getText().toString()+"&username="+editTextsarray[0].getText().toString() + "&Cpr=" +editTextsarray[5].getText().toString()  +"&password="+editTextsarray[2].getText().toString() +"&filial=" + getnearestbank() + "&conformationscode=" +conformEmailcode.getText().toString() );
 
                     if(serverCall.execute()==200){
                         LoginActivity.putExtra("usernmame", editTextsarray[0].getText().toString());
@@ -159,7 +159,6 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
 
 
        }
-        getposition();
   }
 
 

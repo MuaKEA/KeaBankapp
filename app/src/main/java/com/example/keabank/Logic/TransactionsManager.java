@@ -19,50 +19,52 @@ public class TransactionsManager {
 
     public static void startTransactions(Context context) {
 
-        
-        try {
+            Thread thread = new Thread(() -> {
+                try {
 
-                        JSONArray jsonArray = readFileInternalStorage(context);
+                    JSONArray jsonArray = readFileInternalStorage(context);
+                    Log.d(Tag,jsonArray.length() + " <-- length");
+                    for (int i = 0; i < jsonArray.length(); i++) {
 
-                        for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject innerJsonObject = jsonArray.getJSONObject(i);
+                        Long FromReg = innerJsonObject.getLong("FromReg");
+                        Long ToReg = innerJsonObject.getLong("ToReg");
+                        String date = innerJsonObject.getString("date");
+                        LocalDate paydate = LocalDate.of(Integer.valueOf(date.substring(0, 4)), Integer.valueOf(date.substring(5, 7)), Integer.valueOf(date.substring(8, 10)));
+                        Long fromAccountNumer = innerJsonObject.getLong("fromAccountNumer");
+                        Long toAccountNumer = innerJsonObject.getLong("toAccountNumer");
+                       Log.d(Tag,toAccountNumer.toString() + "<.. to accountnumber");
+                        String transactionAmmount = innerJsonObject.getString("transactionAmmount");
+                        String transactionName = innerJsonObject.getString("transactionName");
+                        String message = innerJsonObject.optString("message", "");
 
-                            JSONObject innerJsonObject = jsonArray.getJSONObject(i);
-                            Long FromReg = innerJsonObject.getLong("FromReg");
-                            Long ToReg = innerJsonObject.getLong("ToReg");
-                            String date = innerJsonObject.getString("date");
-                            LocalDate paydate = LocalDate.of(Integer.valueOf(date.substring(0, 4)), Integer.valueOf(date.substring(5, 7)), Integer.valueOf(date.substring(8, 10)));
-                            Long fromAccountNumer = innerJsonObject.getLong("fromAccountNumer");
-                            Long toAccountNumer = innerJsonObject.getLong("toAccountNumer");
-                            String transactionAmmount = innerJsonObject.getString("transactionAmmount");
-                            String transactionName = innerJsonObject.getString("transactionName");
-                            String message = innerJsonObject.optString("message", "");
-
-                            long daystopay = ChronoUnit.DAYS.between(LocalDate.now(), paydate);
-
-
-                            if (daystopay == 0 || Long.toString(daystopay).contains("-")) {
-                                ServerPostRequest transfermoney = new ServerPostRequest("/transaction?transationname=" + transactionName + "&text="
-                                        + message + "&Freg=" + FromReg + "&FaccN=" + fromAccountNumer + "&Treg=" + ToReg + "&TaccN=" + toAccountNumer +
-                                        "&amount=" + transactionAmmount);
+                        long daystopay = ChronoUnit.DAYS.between(LocalDate.now(), paydate);
 
 
-                                if (transfermoney.execute() == 200) {
-                                    updatefile(context, jsonArray);
+                        if (daystopay == 0 || Long.toString(daystopay).contains("-")) {
+                           Log.d(Tag,"sending money");
+                            ServerPostRequest transfermoney = new ServerPostRequest("/transaction?transationname=" + transactionName + "&text="
+                                    + message + "&Freg=" + FromReg + "&FaccN=" + fromAccountNumer + "&Treg=" + ToReg + "&TaccN=" + toAccountNumer +
+                                    "&amount=" + transactionAmmount);
+                            transfermoney.execute();
 
-                                    jsonArray.remove(i);
-                                }
+                            if (transfermoney.getReponse() == 200) {
+                                jsonArray.remove(i);
+                                updatefile(context, jsonArray);
+
                             }
-
-
                         }
 
 
+                    }
 
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-    }
+            });
+            thread.start();
+        }
 
 }

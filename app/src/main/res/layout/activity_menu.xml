@@ -9,14 +9,15 @@
     android:orientation="vertical"
     android:padding="10dp"
     android:background="#fcfcfc"
-    android:gravity="center"
+    android:gravity="center|top"
     android:id="@+id/ll">
+
     <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="212dp"
         android:clipToPadding="false"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
         <android.support.v7.widget.CardView
             android:id="@+id/myaccount"
@@ -24,8 +25,8 @@
             android:layout_height="190dp"
             android:layout_margin="10dp"
             android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:focusable="true">
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,8 +72,8 @@
             android:layout_height="190dp"
             android:layout_margin="10dp"
             android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:focusable="true">
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -113,12 +114,13 @@
         </android.support.v7.widget.CardView>
 
     </LinearLayout>
+
     <LinearLayout
+        android:layout_width="359dp"
+        android:layout_height="206dp"
         android:clipToPadding="false"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
         <android.support.v7.widget.CardView
             android:id="@+id/currency"
@@ -126,8 +128,8 @@
             android:layout_height="190dp"
             android:layout_margin="10dp"
             android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:focusable="true">
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -173,8 +175,8 @@
             android:layout_height="190dp"
             android:layout_margin="10dp"
             android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:focusable="true">
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:id="@+id/transfer"
@@ -215,10 +217,6 @@
         </android.support.v7.widget.CardView>
 
     </LinearLayout>
-    <LinearLayout
-        android:clipToPadding="false"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 </LinearLayout>
+
+

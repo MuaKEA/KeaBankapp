@@ -7,6 +7,8 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 
+import com.example.keabank.Logic.ServerPostRequest;
+
 public class Menu extends AppCompatActivity implements View.OnClickListener {
     String Tag = "Menu Class";
     CardView myaccount,Accounts,currentcy,TranferMoney;
@@ -22,6 +24,7 @@ public class Menu extends AppCompatActivity implements View.OnClickListener {
 
 
 init();
+
 currentcy.setOnClickListener(this);
 Accounts.setOnClickListener(this);
 myaccount.setOnClickListener(this);
@@ -29,6 +32,8 @@ TranferMoney.setOnClickListener(this);
 
 
 }
+
+
 
     private void init() {
         myaccount=findViewById(R.id.myaccount);

@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import static com.example.keabank.Logic.SavingAndReadingFiles.saveToFile;
+import static com.example.keabank.Logic.TransactionsManager.startTransactions;
 
 public class Paybills extends AppCompatActivity implements View.OnClickListener {
     Spinner FromAccount, serialnumber;
@@ -113,7 +114,7 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
 
 
 
-                if (checkemptyfields() && checkifBillExist()) {
+                if (checkemptyfields() && checkifBillExist() && checkdeposit()) {
 
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -170,8 +171,10 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
                             checkserviceCode.execute();
 
                             if (checkserviceCode.getReponse() == 200) {
-
-                                Transactions transaction =new Transactions(TransactionName.getText().toString(),accountObjecs.get(FromAccount.getSelectedItemPosition()).getRegistrationnumber(),accountObjecs.get(FromAccount.getSelectedItemPosition()).getAccountNumber(),Long.valueOf(editTextsArray[4].getText().toString()),Long.valueOf(editTextsArray[4].getText().toString()) ,date.getText().toString(),amount.getText().toString());
+                                Transactions transaction =new Transactions(TransactionName.getText().toString(),txtToReceiver.getText().toString(),
+                                        accountObjecs.get(FromAccount.getSelectedItemPosition()).getRegistrationnumber(),
+                                        accountObjecs.get(FromAccount.getSelectedItemPosition()).getAccountNumber(),Long.valueOf(editTextsArray[4].getText().toString()),
+                                        Long.valueOf(editTextsArray[5].getText().toString()) ,date.getText().toString(),amount.getText().toString());
                                 saveToFile(this,transaction);
 
                                 if(pbscheckbox.isChecked()){
@@ -191,7 +194,8 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
 
 
                                 }
-
+                                Log.d(Tag,"stating transacitons");
+                                startTransactions(this);
                                 Intent transationsactivity = new Intent(this, TransferMoneyMenu.class);
                                 startActivity(transationsactivity);
 
@@ -222,6 +226,19 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
 
         }
     }
+
+    private boolean checkdeposit() {
+        if (accountObjecs.get(FromAccount.getSelectedItemPosition()).getCurrentDeposit() >= Double.valueOf(ammout.getText().toString())) {
+
+            return true;
+        }
+        ammout.setError("Not enough money");
+        Toast.makeText(this, "Not enough money please choose another amount and press send",
+                Toast.LENGTH_LONG).show();
+        return false;
+
+    }
+
 
 
 

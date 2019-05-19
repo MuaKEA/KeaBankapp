@@ -33,6 +33,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         startup();
         getData();
         starttransactions();
+
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             Email.setText(extras.getString("usernmame"));
@@ -88,6 +90,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 LayoutInflater inflater = getLayoutInflater();
 
                 final View dialogView = inflater.inflate(R.layout.forgot_password, null);
+
                 dialogBuilder.setView(dialogView);
 
                 final EditText editEmail = (EditText) dialogView.findViewById(R.id.conformEmail);
@@ -113,11 +116,17 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     }
 
                     ServerPostRequest Emailchecker=  new ServerPostRequest("/checkemail?Email=" + editEmail.getText().toString());
-
+                    Emailchecker.execute();
                     if (Emailchecker.getReponse()==200){
                         ServerPostRequest RequestnewPassword= new ServerPostRequest("/forgotpassword?Email=" + editEmail.getText().toString());
-                           Log.d(Tag,RequestnewPassword.getReponse() + "<--RequestnewPassword");
+                        RequestnewPassword.execute();
+
+
+
+
                         dialog.dismiss();
+
+
                     }
 
 

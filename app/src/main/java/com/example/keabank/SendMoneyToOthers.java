@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static com.example.keabank.Logic.SavingAndReadingFiles.saveToFile;
+import static com.example.keabank.Logic.TransactionsManager.startTransactions;
 
 public class SendMoneyToOthers extends AppCompatActivity implements View.OnClickListener {
 Spinner accountSpinner;
@@ -64,8 +65,7 @@ Spinner accountSpinner;
     transactionName =findViewById(R.id.transactionName);
     date=findViewById(R.id.edittext_date);
 
-    registrationNumber.setText("4444");
-        AccNumber.setText("4444563282");
+
     }
 
 
@@ -102,7 +102,7 @@ Spinner accountSpinner;
 
 
             case R.id.sendmoney:
-            if(isfieldsvaild() && checkdeposit()){
+            if(isfieldsvaild() && checkdeposit() && checkifAccountexist()){
                 ServerPostRequest sendconformationcode = new ServerPostRequest("/sendserviceCode?Email="+Email);
                 sendconformationcode.execute();
 
@@ -149,13 +149,14 @@ Spinner accountSpinner;
 
                 SendMoneyBtn.setOnClickListener(v2 -> {
 
-                    ServerPostRequest serverPostRequest = new ServerPostRequest("/accountchecker?reg="+ registrationNumber.getText().toString()+"&accountnumber=" + AccNumber.getText().toString());
-                        if(serverPostRequest.execute()==200){
+                    //ServerPostRequest serverPostRequest = new ServerPostRequest("/accountchecker?reg="+ registrationNumber.getText().toString()+"&accountnumber=" + AccNumber.getText().toString());
+                      ServerPostRequest checkservicescode= new ServerPostRequest("/ServiceCodechecker?Email=" + Email + "&servicecode=" + conformationCode.getText().toString());
+                      if(checkservicescode.execute()==200){
 
                             Transactions transactionpbs =new Transactions(transactionName.getText().toString(),accountobjects.get(fromaccoutspinner.getSelectedItemPosition()).getRegistrationnumber(),accountobjects.get(fromaccoutspinner.getSelectedItemPosition()).getAccountNumber(),Long.valueOf(registrationNumber.getText().toString()),Long.valueOf(AccNumber.getText().toString()) ,date.getText().toString(),amount.getText().toString());
                             saveToFile(this,transactionpbs);
 
-
+                            startTransactions(this);
                             Intent transationsactivity = new Intent(this,TransferMoneyMenu.class);
                             startActivity(transationsactivity);
 
@@ -177,7 +178,7 @@ Spinner accountSpinner;
 
                 break;
 
-            case R.id.date:
+            case R.id.edittext_date:
                 Usefulmethods calender = new Usefulmethods(date, this);
                 calender.CalenderEdittext();
                 break;
@@ -185,8 +186,21 @@ Spinner accountSpinner;
         }
     }
 
+    private boolean checkifAccountexist() {
+    ServerPostRequest checkifaccountexist= new ServerPostRequest("/accountchecker?reg=" +registrationNumber.getText().toString() +"&accountnumber" + AccNumber.getText().toString());
+    checkifaccountexist.execute();
+
+    if (checkifaccountexist.getReponse()==200){
+        return true;
+    }
+    Toast.makeText(this,"Error: Account doesnt exist please check account and registration number",Toast.LENGTH_LONG).show();
+    registrationNumber.setError("check again");
+    AccNumber.setError("check again");
 
 
+    return false;
+
+    }
 
 
     private boolean isfieldsvaild() {
