@@ -3,6 +3,7 @@ package com.example.keabank.Logic;
 import android.util.Log;
 
 import com.example.keabank.Model.Accounts;
+import com.example.keabank.Model.Transactions;
 import com.example.keabank.internetConnetivity.ServerGetCall;
 
 import org.json.JSONArray;
@@ -58,8 +59,8 @@ public class ServerGetRequest {
     }
 
 
-    public ArrayList<String> GetAllTransActions() {
-        ArrayList<String> transactionarrayList= new ArrayList<>();
+    public ArrayList<Transactions> GetAllTransActions() {
+        ArrayList<Transactions> transactionarrayList= new ArrayList<>();
 
         Log.d(Tag,reponse);
         try {
@@ -71,8 +72,8 @@ public class ServerGetRequest {
         JSONObject innerJsonObject = transActions.getJSONObject(i);
 
         String transactionName = innerJsonObject.getString("transactionName");
-        String dopositAfterTransaction = innerJsonObject.getString("dopositAfterTransaction");
-        double transactionAmmount = innerJsonObject.getDouble("transactionAmmount");
+        double dopositAfterTransaction = innerJsonObject.getDouble("dopositAfterTransaction");
+        String transactionAmmount = innerJsonObject.getString("transactionAmmount");
         String date = innerJsonObject.getString("date");
         boolean sendingOrreciving = innerJsonObject.getBoolean("sendingOrreciving");
         String doubletostring;
@@ -83,8 +84,7 @@ public class ServerGetRequest {
             doubletostring = "-" + transactionAmmount;
 
         }
-            transactionarrayList.add(transactionName + "                " + doubletostring + "\n" + date + "                                       " + dopositAfterTransaction);
-
+            transactionarrayList.add(new Transactions(transactionName,date,doubletostring,dopositAfterTransaction));
         }
 
         } catch (Exception e) {

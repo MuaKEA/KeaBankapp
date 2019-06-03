@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import com.example.keabank.Logic.ServerGetRequest;
+import com.example.keabank.Model.Transactions;
+
 import java.util.ArrayList;
 
 
@@ -16,7 +18,7 @@ public class SeeTransActions extends AppCompatActivity implements MyRecyclerView
 String Email,accountName;
 String Tag="SeeTransActions";
     MyRecyclerViewAdapter adapter;
-    ArrayList<String> transActions;
+    ArrayList<Transactions> transActions;
 
 
     @Override
@@ -45,11 +47,13 @@ String Tag="SeeTransActions";
 
     public void inflatereclerview(){
 
-        RecyclerView recyclerView = findViewById(R.id.Transactions);
+        RecyclerView recyclerView = findViewById(R.id.showTransactionsname);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MyRecyclerViewAdapter(this,recyclerView.getId(),R.layout.account_transactions_row, transActions);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
+
+
     }
 
     private void Getvaluesfromsharedpref() {
@@ -61,7 +65,7 @@ String Tag="SeeTransActions";
 
     private void status(){
         for (int i = 0; i <transActions.size() ; i++) {
-            Log.d(Tag,transActions.get(i));
+            Log.d(Tag,transActions.get(i).getTransactionName());
         }
     }
 

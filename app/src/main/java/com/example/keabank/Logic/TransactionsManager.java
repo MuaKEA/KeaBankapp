@@ -14,9 +14,6 @@ import static com.example.keabank.Logic.SavingAndReadingFiles.updatefile;
 public class TransactionsManager {
     private static String Tag = "TransactionsManager";
 
-
-
-
     public static void startTransactions(Context context) {
 
             Thread thread = new Thread(() -> {
@@ -33,11 +30,11 @@ public class TransactionsManager {
                         LocalDate paydate = LocalDate.of(Integer.valueOf(date.substring(0, 4)), Integer.valueOf(date.substring(5, 7)), Integer.valueOf(date.substring(8, 10)));
                         Long fromAccountNumer = innerJsonObject.getLong("fromAccountNumer");
                         Long toAccountNumer = innerJsonObject.getLong("toAccountNumer");
-                       Log.d(Tag,toAccountNumer.toString() + "<.. to accountnumber");
+                        Log.d(Tag,toAccountNumer.toString() + "<.. to accountnumber");
                         String transactionAmmount = innerJsonObject.getString("transactionAmmount");
                         String transactionName = innerJsonObject.getString("transactionName");
                         String message = innerJsonObject.optString("message", "");
-
+                        Log.d(Tag,message  + "<--this is the message to reciever");
                         long daystopay = ChronoUnit.DAYS.between(LocalDate.now(), paydate);
 
 

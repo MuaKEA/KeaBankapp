@@ -11,6 +11,7 @@ public class Transactions {
     private Long toAccountNumer;
     private String date;
     private String transactionAmmount;
+    private Double currentdeposit;
 
 
     public Transactions() {
@@ -38,7 +39,12 @@ public class Transactions {
         this.transactionAmmount = transactionAmmount;
     }
 
-
+    public Transactions(String transactionName, String date, String transactionAmmount, Double currentdeposit) {
+        this.transactionName = transactionName;
+        this.date = date;
+        this.transactionAmmount = transactionAmmount;
+        this.currentdeposit = currentdeposit;
+    }
 
     public String getTransactionName() {
         return transactionName;
@@ -105,6 +111,14 @@ public class Transactions {
         this.message = message;
     }
 
+
+    public Double getCurrentdeposit() {
+        return currentdeposit;
+    }
+
+    public void setCurrentdeposit(Double currentdeposit) {
+        this.currentdeposit = currentdeposit;
+    }
 
     @Override
     public String toString() {

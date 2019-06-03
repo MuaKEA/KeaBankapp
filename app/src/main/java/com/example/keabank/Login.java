@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.example.keabank.Logic.ServerPostRequest;
-import com.example.keabank.Logic.TransactionsManager;
 
 import static com.example.keabank.Logic.TransactionsManager.startTransactions;
 
@@ -58,7 +57,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         Login = findViewById(R.id.Sign_in);
         forgotpasswordbtn= findViewById(R.id.forgotpassword);
 
-        Password.setText("12345");
     }
 
 
@@ -90,7 +88,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 LayoutInflater inflater = getLayoutInflater();
 
                 final View dialogView = inflater.inflate(R.layout.forgot_password, null);
-
                 dialogBuilder.setView(dialogView);
 
                 final EditText editEmail = (EditText) dialogView.findViewById(R.id.conformEmail);
@@ -121,17 +118,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         ServerPostRequest RequestnewPassword= new ServerPostRequest("/forgotpassword?Email=" + editEmail.getText().toString());
                         RequestnewPassword.execute();
 
-
-
-
                         dialog.dismiss();
 
 
                     }
-
-
-
-
                 });
                 dialog.show();
 

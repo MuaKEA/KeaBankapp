@@ -11,10 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import com.example.keabank.Logic.ServerGetRequest;
 import com.example.keabank.Model.Accounts;
+
 import java.util.ArrayList;
 
-public class ChooseAccount extends AppCompatActivity implements View.OnClickListener,MyRecyclerViewAdapter.ItemClickListener {
-    MyRecyclerViewAdapter adapter;
+public class ChooseAccount extends AppCompatActivity implements View.OnClickListener, AccountsAdapter.ItemClickListener {
+    AccountsAdapter adapter;
     String Tag = "ChooseAccount";
     String Email;
     ArrayList<String> accountsNamesAndDeposit;
@@ -41,7 +42,7 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
 
         RecyclerView recyclerView = findViewById(R.id.Aacounts);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MyRecyclerViewAdapter(this,recyclerView.getId(),R.layout.recyclerview_row, accountsNamesAndDeposit);
+        adapter = new AccountsAdapter(this,recyclerView.getId(),R.layout.recyclerview_row, accountsNamesAndDeposit);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
     }

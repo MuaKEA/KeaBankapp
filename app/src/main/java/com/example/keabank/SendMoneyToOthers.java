@@ -151,9 +151,10 @@ Spinner accountSpinner;
 
                     //ServerPostRequest serverPostRequest = new ServerPostRequest("/accountchecker?reg="+ registrationNumber.getText().toString()+"&accountnumber=" + AccNumber.getText().toString());
                       ServerPostRequest checkservicescode= new ServerPostRequest("/ServiceCodechecker?Email=" + Email + "&servicecode=" + conformationCode.getText().toString());
-                      if(checkservicescode.execute()==200){
+                      checkservicescode.execute();
+                      if(checkservicescode.getReponse()==200){
 
-                            Transactions transactionpbs =new Transactions(transactionName.getText().toString(),accountobjects.get(fromaccoutspinner.getSelectedItemPosition()).getRegistrationnumber(),accountobjects.get(fromaccoutspinner.getSelectedItemPosition()).getAccountNumber(),Long.valueOf(registrationNumber.getText().toString()),Long.valueOf(AccNumber.getText().toString()) ,date.getText().toString(),amount.getText().toString());
+                            Transactions transactionpbs =new Transactions(transactionName.getText().toString(),txtToreciever.getText().toString(),accountobjects.get(fromaccoutspinner.getSelectedItemPosition()).getRegistrationnumber(),accountobjects.get(fromaccoutspinner.getSelectedItemPosition()).getAccountNumber(),Long.valueOf(registrationNumber.getText().toString()),Long.valueOf(AccNumber.getText().toString()) ,date.getText().toString(),amount.getText().toString());
                             saveToFile(this,transactionpbs);
 
                             startTransactions(this);
@@ -187,7 +188,7 @@ Spinner accountSpinner;
     }
 
     private boolean checkifAccountexist() {
-    ServerPostRequest checkifaccountexist= new ServerPostRequest("/accountchecker?reg=" +registrationNumber.getText().toString() +"&accountnumber" + AccNumber.getText().toString());
+    ServerPostRequest checkifaccountexist= new ServerPostRequest("/accountchecker?reg=" +registrationNumber.getText().toString() +"&accountnumber=" + AccNumber.getText().toString());
     checkifaccountexist.execute();
 
     if (checkifaccountexist.getReponse()==200){

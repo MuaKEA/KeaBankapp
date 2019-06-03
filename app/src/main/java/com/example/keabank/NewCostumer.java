@@ -123,6 +123,8 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
             LayoutInflater inflater = getLayoutInflater();
             final View dialogView = inflater.inflate(R.layout.conform_email_adress, null);
             dialogBuilder.setView(dialogView);
+            dialogView.setMinimumWidth(500);
+
             final EditText conformEmailcode = (EditText) dialogView.findViewById(R.id.conformEmail);
             final Button createuserbtn = (Button) dialogView.findViewById(R.id.Conform_email_btn);
             final AlertDialog dialog = dialogBuilder.create();
@@ -143,8 +145,8 @@ public class NewCostumer extends AppCompatActivity implements View.OnClickListen
 
 
                     ServerPostRequest serverCall = new ServerPostRequest("/createuser?fullname="+editTextsarray[1].getText().toString()+"&username="+editTextsarray[0].getText().toString() + "&Cpr=" +editTextsarray[5].getText().toString()  +"&password="+editTextsarray[2].getText().toString() +"&filial=" + getnearestbank() + "&conformationscode=" +conformEmailcode.getText().toString() );
-
-                    if(serverCall.execute()==200){
+                        serverCall.execute();
+                    if(serverCall.getReponse()==200){
                         LoginActivity.putExtra("usernmame", editTextsarray[0].getText().toString());
                         LoginActivity.putExtra("password", editTextsarray[2].getText().toString());
                         startActivity(LoginActivity);

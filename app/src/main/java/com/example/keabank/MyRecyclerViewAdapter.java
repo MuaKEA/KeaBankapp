@@ -1,6 +1,6 @@
 package com.example.keabank;
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,18 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.keabank.Model.Transactions;
+
 import java.util.List;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
-    private List<String> mData;
+    private List<Transactions> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private int Activityname;
     private int layoutplace;
 
     // data is passed into the constructor
-    MyRecyclerViewAdapter(Context context,int Activityname,int layoutplace, List<String> data) {
+    MyRecyclerViewAdapter(Context context,int Activityname,int layoutplace, List<Transactions> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.Activityname=Activityname;
@@ -37,8 +39,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String account = mData.get(position);
-        holder.myTextView.setText(account);
+        Transactions transaction = mData.get(position);
+        holder.Transactionsname.setText(transaction.getTransactionName());
+        holder.date.setText(transaction.getDate());
+        holder.depositaftertransantions.setText(transaction.getCurrentdeposit().toString());
+        holder.transactionsAmmount.setText(transaction.getTransactionAmmount());
     }
 
     // total number of rows
@@ -50,22 +55,32 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myTextView;
+        TextView Transactionsname;
+        TextView date;
+        TextView transactionsAmmount;
+        TextView depositaftertransantions;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(Activityname);
+            Transactionsname = itemView.findViewById(R.id.showTransactionsname);
+            date=itemView.findViewById(R.id.showdate);
+            transactionsAmmount=itemView.findViewById(R.id.transactionsvalue);
+            depositaftertransantions=itemView.findViewById(R.id.showdeposit);
+
+
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+
         }
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
+    Transactions getItem(int id) {
+
         return mData.get(id);
     }
 

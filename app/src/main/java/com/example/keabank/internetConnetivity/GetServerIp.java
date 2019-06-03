@@ -4,7 +4,7 @@ public class GetServerIp {
     private String ip;
 
 
-    private static final GetServerIp ourInstance = new GetServerIp("http://10.149.88.167:8888");
+    private static final GetServerIp ourInstance = new GetServerIp("http://Keabankaws-env.q4uhvhkr2z.eu-central-1.elasticbeanstalk.com");
 
     public static String getInstance() {
         return ourInstance.ip;

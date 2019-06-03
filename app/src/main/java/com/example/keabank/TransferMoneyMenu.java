@@ -9,6 +9,8 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 
+import static com.example.keabank.Logic.TransactionsManager.startTransactions;
+
 public class TransferMoneyMenu extends AppCompatActivity implements View.OnClickListener {
 String Tag ="TransferMoneyMenu";
 String Email;
@@ -28,6 +30,7 @@ String Email;
         TransferOwnAccounts=findViewById(R.id.TransferOwnAccounts);
         paybills=findViewById(R.id.paybills);
         TransferToOthers=findViewById(R.id.TransferMoneyToOthers);
+        startTransactions(this);
         Getvaluesfromsharedpref();
     }
 
