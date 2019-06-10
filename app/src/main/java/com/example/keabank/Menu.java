@@ -22,11 +22,11 @@ public class Menu extends AppCompatActivity implements View.OnClickListener {
 
 init();
 
-currentcy.setOnClickListener(this);
-Accounts.setOnClickListener(this);
-myaccount.setOnClickListener(this);
-TranferMoney.setOnClickListener(this);
-Bankinfo.setOnClickListener(this);
+    currentcy.setOnClickListener(this);
+    Accounts.setOnClickListener(this);
+    myaccount.setOnClickListener(this);
+    TranferMoney.setOnClickListener(this);
+    Bankinfo.setOnClickListener(this);
 
 }
 

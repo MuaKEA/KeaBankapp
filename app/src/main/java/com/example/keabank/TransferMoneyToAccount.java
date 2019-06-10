@@ -199,7 +199,7 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
                     return false;
 
                 }else {
-                     Toast.makeText(this,"you must be 77 or more to withdraw money",Toast.LENGTH_LONG).show();
+                    amounttosend.setError("you must be 77 or more to withdraw money");
 
 
                 }
