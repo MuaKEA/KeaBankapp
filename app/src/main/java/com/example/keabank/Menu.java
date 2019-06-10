@@ -8,7 +8,7 @@ import android.view.View;
 
 public class Menu extends AppCompatActivity implements View.OnClickListener {
     String Tag = "Menu Class";
-    CardView myaccount,Accounts,currentcy,TranferMoney;
+    CardView myaccount,Accounts,currentcy,TranferMoney,Bankinfo;
 
 
 
@@ -26,7 +26,7 @@ currentcy.setOnClickListener(this);
 Accounts.setOnClickListener(this);
 myaccount.setOnClickListener(this);
 TranferMoney.setOnClickListener(this);
-
+Bankinfo.setOnClickListener(this);
 
 }
 
@@ -37,14 +37,15 @@ TranferMoney.setOnClickListener(this);
         Accounts=findViewById(R.id.accounts);
         currentcy=findViewById(R.id.currency);
         TranferMoney=findViewById(R.id.moneytranfer);
+        Bankinfo=findViewById(R.id.Bankinfo);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
 
-            case R.id.transfer:
-                Intent trans = new Intent(this, SeeTransActions.class);
+            case R.id.myaccount:
+                Intent trans = new Intent(this, Account.class);
                 startActivity(trans);
                 break;
 
@@ -57,11 +58,17 @@ TranferMoney.setOnClickListener(this);
                 Intent curr = new Intent(this, Currency.class);
                 startActivity(curr);
                 break;
+
             case R.id.moneytranfer:
                 Intent moneyT = new Intent(this, TransferMoneyMenu.class);
                 startActivity(moneyT);
                 break;
 
+
+            case R.id.Bankinfo:
+                Intent bankinfo = new Intent(this, BankInfo.class);
+                startActivity(bankinfo);
+                break;
         }
     }
     }
