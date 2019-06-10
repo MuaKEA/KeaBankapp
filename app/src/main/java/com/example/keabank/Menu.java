@@ -1,13 +1,10 @@
 package com.example.keabank;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
-
-import com.example.keabank.Logic.ServerPostRequest;
 
 public class Menu extends AppCompatActivity implements View.OnClickListener {
     String Tag = "Menu Class";
@@ -57,7 +54,7 @@ TranferMoney.setOnClickListener(this);
                 break;
 
             case R.id.currency:
-                Intent curr = new Intent(this, CreateAccount.class);
+                Intent curr = new Intent(this, Currency.class);
                 startActivity(curr);
                 break;
             case R.id.moneytranfer:

@@ -1,14 +1,12 @@
 package com.example.keabank;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,24 +17,27 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.keabank.Logic.ServerGetRequest;
 import com.example.keabank.Logic.ServerPostRequest;
 import com.example.keabank.Logic.Usefulmethods;
 import com.example.keabank.Model.Accounts;
 import com.example.keabank.Model.Transactions;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
+
 import static com.example.keabank.Logic.SavingAndReadingFiles.saveToFile;
 
 
 public class TransferMoneyToAccount extends AppCompatActivity implements View.OnClickListener {
     Spinner FromAcc, ToAcc;
     Button SendMoney;
-    EditText amount;
+    EditText amounttosend;
     String Email;
     ArrayList<String> ArrayListoSpinner;
     ArrayList<Accounts> accountobjects;
-    String Tag = "TransferMoneyToAccount";
+    String TAG = "TransferMoneyToAccount";
     CheckBox checkBox;
 
 
@@ -77,14 +78,14 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
         FromAcc = findViewById(R.id.AmountTosend);
         ToAcc = findViewById(R.id.ToAccount);
         SendMoney = findViewById(R.id.SendMoney);
-        amount = findViewById(R.id.amount);
+        amounttosend = findViewById(R.id.amount);
 
     }
 
     private void Getvaluesfromsharedpref() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         Email = pref.getString("username", "");
-        Log.d(Tag, Email + "<---Email from shared");
+        Log.d(TAG, Email + "<---Email from shared");
 
     }
 
@@ -100,8 +101,10 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
 
     @Override
     public void onClick(View v) {
-        if (accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountType().equals("Pension") &&  requirementschecker() && checkdeposit(accountobjects.get(FromAcc.getSelectedItemPosition()).getCurrentDeposit())) {
 
+                if (accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountType().equals("Pension") &&  requirementschecker() && checkdeposit(accountobjects.get(FromAcc.getSelectedItemPosition()).getCurrentDeposit()) || accountobjects.get(ToAcc.getSelectedItemPosition()).getAccountType().equals("Pension") && checkdeposit(accountobjects.get(FromAcc.getSelectedItemPosition()).getCurrentDeposit())) {
+
+                    Log.d(TAG, "onClick: inside if statement pension");
                     ServerPostRequest sendconformationcode = new ServerPostRequest("/sendserviceCode?Email="+Email);
                     sendconformationcode.execute();
 
@@ -129,7 +132,8 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
                     accountType.setText(accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountType());
                     accountNumber.setText(accountobjects.get(ToAcc.getSelectedItemPosition()).getAccountName());
                     registrationnumber.setText(accountobjects.get(ToAcc.getSelectedItemPosition()).getAccountType());
-                    amount.setText(amount.getText().toString());
+
+                    amount.setText(amounttosend.getText().toString());
                     AlertDialog dialog = dialogBuilder.create();
 
 
@@ -157,12 +161,9 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
                     dialog.show();
 
 
-                } else if (!accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountType().equals("Pension") && checkdeposit(accountobjects.get(FromAcc.getSelectedItemPosition()).getCurrentDeposit())){
-                    Log.d(Tag,"ikke pension");
+                } else if (!accountobjects.get(ToAcc.getSelectedItemPosition()).getAccountType().equals("Pension") && !accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountType().equals("Pension") && checkdeposit(accountobjects.get(FromAcc.getSelectedItemPosition()).getCurrentDeposit())){
+                   MakeTransActionHappen();
 
-                    MakeTransActionHappen();
-                    Intent intent =  new Intent(this,Menu.class);
-                   startActivity(intent);
 
                 }
 
@@ -175,9 +176,10 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
 
 
         private void MakeTransActionHappen() {
-            Transactions transaction =  new Transactions("hallo",accountobjects.get(FromAcc.getSelectedItemPosition()).getRegistrationnumber(),accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountNumber(),accountobjects.get(ToAcc.getSelectedItemPosition()).getRegistrationnumber(),accountobjects.get(ToAcc.getSelectedItemPosition()).getAccountNumber(), LocalDate.now().toString(),amount.getText().toString());
+            Transactions transaction =  new Transactions("hallo",accountobjects.get(FromAcc.getSelectedItemPosition()).getRegistrationnumber(),accountobjects.get(FromAcc.getSelectedItemPosition()).getAccountNumber(),accountobjects.get(ToAcc.getSelectedItemPosition()).getRegistrationnumber(),accountobjects.get(ToAcc.getSelectedItemPosition()).getAccountNumber(), LocalDate.now().toString(),amounttosend.getText().toString());
             saveToFile(this,transaction);
-
+            Intent intent =  new Intent(this,Menu.class);
+            startActivity(intent);
         }
 
 
@@ -186,14 +188,14 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
         public boolean requirementschecker(){
             ServerGetRequest serverGetCall= new ServerGetRequest("/getCpr?Email="+Email);
 
-            Log.d(Tag,serverGetCall.getCpr());
+            Log.d(TAG,serverGetCall.getCpr());
 
 
 
                 Usefulmethods usefulmethods = new Usefulmethods(serverGetCall.getCpr());
 
                 if(usefulmethods.ageChecker()){
-                    Log.d(Tag,usefulmethods.ageChecker() +"check age");
+                    Log.d(TAG,usefulmethods.ageChecker() +"check age");
                     return false;
 
                 }else {
@@ -206,11 +208,11 @@ public class TransferMoneyToAccount extends AppCompatActivity implements View.On
         }
 
         public boolean checkdeposit(Double amounts) {
-        if (amounts >= Double.valueOf(amount.getText().toString())) {
+        if (amounts >= Double.valueOf(amounttosend.getText().toString())) {
 
                 return true;
             }
-            amount.setError("Not enough money");
+            amounttosend.setError("Not enough money");
             Toast.makeText(this, "Not enough money please choose another amount and press send",
                     Toast.LENGTH_LONG).show();
             return false;
