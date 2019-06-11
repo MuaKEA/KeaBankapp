@@ -1,11 +1,15 @@
 package com.example.keabank.Logic;
 
 
-import com.example.keabank.internetConnetivity.ServerPostCall;
+import android.os.AsyncTask;
 
+import com.example.keabank.internetConnetivity.GetServerIp;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
-public class ServerPostRequest {
+public class ServerPostRequest extends AsyncTask<String,String,Integer> {
 
     private String url;
     private String Tag = "ServerGetRequest";
@@ -20,9 +24,8 @@ public class ServerPostRequest {
 
     public Integer execute(){
 
-        ServerPostCall serverGetCall = new ServerPostCall(url);
         try {
-            reponse=serverGetCall.execute().get();
+            reponse=execute(url).get();
 
 
         } catch (ExecutionException e) {
@@ -34,19 +37,43 @@ public class ServerPostRequest {
     }
 
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public Integer getReponse() {
         return reponse;
     }
 
-    public void setReponse(Integer reponse) {
-        this.reponse = reponse;
+
+
+    @Override
+    protected Integer doInBackground(String... strings) {
+        String ip= GetServerIp.getInstance();
+        String webapiadress = ip + url;
+        Integer reponse=null;
+
+        URL url;
+        try {
+            url = new URL(webapiadress);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.connect();
+            reponse = con.getResponseCode();
+            con.disconnect();
+
+
+            if(reponse==200){
+                return reponse;
+            }else{
+                return 401;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+
+        }
+
+
+
+        return null;
     }
 }

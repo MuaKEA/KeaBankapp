@@ -33,7 +33,7 @@ public class Account extends AppCompatActivity implements AccountsRecyclerview.I
     }
 
     private void getaccountsFromServer() {
-        ServerGetRequest serverGetRequest = new ServerGetRequest("/getaccounts?Email=" +Email);
+        ServerGetRequest serverGetRequest = new ServerGetRequest(Email);
         accountsList= serverGetRequest.GetAllAccounobjects();
 
 

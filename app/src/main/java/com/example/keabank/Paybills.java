@@ -85,7 +85,7 @@ public class Paybills extends AppCompatActivity implements View.OnClickListener 
 
     public void getAllAccounts() {
         accountnames = new ArrayList<>();
-        ServerGetRequest getAllAccounts = new ServerGetRequest("/getaccounts?Email=" + Email);
+        ServerGetRequest getAllAccounts = new ServerGetRequest(Email);
         accountObjecs = getAllAccounts.GetAllAccounobjects();
 
         for (int i = 0; i < accountObjecs.size(); i++) {

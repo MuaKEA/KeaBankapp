@@ -47,7 +47,7 @@ public class BankInfo extends AppCompatActivity implements View.OnClickListener,
 
     private void contactServer() {
 
-        ServerGetRequest getaccounts=new ServerGetRequest("/getaccounts?Email=" +Email);
+        ServerGetRequest getaccounts=new ServerGetRequest(Email);
 
 
         ArrayList<Accounts> accounts=getaccounts.GetAllAccounobjects() ;

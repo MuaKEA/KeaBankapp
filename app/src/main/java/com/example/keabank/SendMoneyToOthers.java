@@ -78,7 +78,7 @@ Spinner accountSpinner;
 
     }
     public void getAllAccountNames(){
-        ServerGetRequest serverGetRequest = new ServerGetRequest("/getaccounts?Email=" +Email);
+        ServerGetRequest serverGetRequest = new ServerGetRequest(Email);
         accountobjects= serverGetRequest.GetAllAccounobjects();
         ArrayListoSpinner= new ArrayList<>();
         for (int i = 0; i <accountobjects.size() ; i++) {

@@ -84,7 +84,7 @@ public class ChooseAccount extends AppCompatActivity implements View.OnClickList
 public void getAllAccountsFromServer() {
 
     accountsNamesAndDeposit= new ArrayList<>();
-    ServerGetRequest getAllAccounts = new ServerGetRequest("/getaccounts?Email=" + Email);
+    ServerGetRequest getAllAccounts = new ServerGetRequest(Email);
     accountsobjects=getAllAccounts.GetAllAccounobjects();
 
     for (int i = 0; i <accountsobjects.size() ; i++) {
