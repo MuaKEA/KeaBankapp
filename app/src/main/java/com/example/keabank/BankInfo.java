@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.keabank.Logic.ServerGetRequest;
+import com.example.keabank.internetConnetivity.ServerGetRequest;
 import com.example.keabank.Model.Accounts;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

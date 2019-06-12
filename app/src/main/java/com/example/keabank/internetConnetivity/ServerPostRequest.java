@@ -1,20 +1,17 @@
-package com.example.keabank.Logic;
+package com.example.keabank.internetConnetivity;
 
 
 import android.os.AsyncTask;
-
-import com.example.keabank.internetConnetivity.GetServerIp;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
-public class ServerPostRequest extends AsyncTask<String,String,Integer> {
+public  class ServerPostRequest extends AsyncTask<String,String,Integer> {
 
     private String url;
     private String Tag = "ServerGetRequest";
     private Integer reponse;
-
 
     public ServerPostRequest(String url) {
         this.url = url;
@@ -22,8 +19,10 @@ public class ServerPostRequest extends AsyncTask<String,String,Integer> {
 
     }
 
-    public Integer execute(){
 
+
+
+    public Integer execute(){
         try {
             reponse=execute(url).get();
 
@@ -45,11 +44,17 @@ public class ServerPostRequest extends AsyncTask<String,String,Integer> {
 
 
     @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
+
+
+
+    @Override
     protected Integer doInBackground(String... strings) {
         String ip= GetServerIp.getInstance();
         String webapiadress = ip + url;
         Integer reponse=null;
-
         URL url;
         try {
             url = new URL(webapiadress);
@@ -74,6 +79,17 @@ public class ServerPostRequest extends AsyncTask<String,String,Integer> {
 
 
 
+
         return null;
+    }
+
+    @Override
+    protected void onProgressUpdate(String... values) {
+        super.onProgressUpdate(values);
+    }
+
+    @Override
+    protected void onPostExecute(Integer integer) {
+        super.onPostExecute(integer);
     }
 }

@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.keabank.Logic.ServerPostRequest;
+import com.example.keabank.internetConnetivity.ServerPostRequest;
 import java.io.IOException;
 import java.util.List;
 

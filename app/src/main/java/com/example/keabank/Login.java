@@ -2,9 +2,9 @@ package com.example.keabank;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-import com.example.keabank.Logic.ServerPostRequest;
+
+import com.example.keabank.internetConnetivity.ServerPostRequest;
 
 import static com.example.keabank.Logic.TransactionsManager.startTransactions;
 
@@ -51,7 +51,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private void startup() {
         Email = findViewById(R.id.conformEmail);
-        Createuser=findViewById(R.id.RegisterUser);
+        Createuser = findViewById(R.id.RegisterUser);
         Password = findViewById(R.id.password);
         remember_Checkbox = findViewById(R.id.Remember_me);
         Login = findViewById(R.id.Sign_in);
@@ -67,8 +67,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
             case R.id.Sign_in:
 
-
-                   loginchecker(UsernameAndPasswordvalidation());
+                loginchecker(UsernameAndPasswordvalidation());
 
                    break;
 
@@ -92,7 +91,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                 final EditText editEmail = (EditText) dialogView.findViewById(R.id.conformEmail);
                 final Button btnReset = (Button) dialogView.findViewById(R.id.Conform_email_btn);
-                final ProgressBar progressBar1 = (ProgressBar) dialogView.findViewById(R.id.progressBar);
                 final AlertDialog dialog = dialogBuilder.create();
                 final Button backbtn= dialogView.findViewById(R.id.btn_back);
 

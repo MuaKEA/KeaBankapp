@@ -18,11 +18,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.keabank.Logic.ServerPostRequest;
+import com.example.keabank.internetConnetivity.ServerPostRequest;
 import com.example.keabank.Logic.Usefulmethods;
 import com.example.keabank.Model.Accounts;
 import com.example.keabank.Model.Transactions;
-import com.example.keabank.Logic.ServerGetRequest;
+import com.example.keabank.internetConnetivity.ServerGetRequest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

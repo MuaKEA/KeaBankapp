@@ -1,11 +1,10 @@
-package com.example.keabank.Logic;
+package com.example.keabank.internetConnetivity;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.keabank.Model.Accounts;
 import com.example.keabank.Model.Transactions;
-import com.example.keabank.internetConnetivity.GetServerIp;
 
 import org.json.JSONArray;
 import org.json.JSONException;

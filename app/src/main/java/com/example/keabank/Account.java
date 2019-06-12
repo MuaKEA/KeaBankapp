@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.example.keabank.Logic.ServerGetRequest;
+import com.example.keabank.internetConnetivity.ServerGetRequest;
 import com.example.keabank.Model.Accounts;
 
 import java.util.List;
