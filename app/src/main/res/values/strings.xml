@@ -12,4 +12,49 @@
     <string name="sign_here">sign here</string>
     <string name="conformpassword">Conformpassword</string>
     <string name="Conformbutton">I have Read And conformed</string>
+    <string name="cpr">CPR</string>
+    <string name="Account">Account:</string>
+    <string name="create_new_account">create new Account</string>
+    <string name="to_account">To Account</string>
+    <string name="text_to_receiver">text to receiver</string>
+    <string name="requiredwarning">Required</string>
+    <string name="account_type">Account Type</string>
+
+
+    <string-array name="country_arrays">
+        <item>Denmark</item>
+        <item>Sweden</item>
+        <item>United States</item>
+        <item>EURO</item>
+        <item>Japan</item>
+        <item>Turkey</item>
+    </string-array>
+
+    <string-array name="accounts_type">
+        <item>Standart</item>
+        <item>Budget</item>
+        <item>Savings</item>
+        <item>Pension</item>
+        <item>Business</item>
+    </string-array>
+
+
+    <string-array name="sendingplans">
+        <item>Monthly</item>
+        <item>Dayli</item>
+        <item>weekly</item>
+        <item>Yearly</item>
+        <item>date</item>
+        <item>NOTransfer</item>
+    </string-array>
+
+    <string-array name="servicecodearray">
+        <item>+71</item>
+        <item>+72</item>
+        <item>+73</item>
+        <item>+74</item>
+
+    </string-array>
+    <string name="google_maps_key">AIzaSyDV1TeUKdJEV_MRpfs51Zt0hzlluRf3QpA</string>
+
 </resources>

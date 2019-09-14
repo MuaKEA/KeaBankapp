@@ -2,50 +2,63 @@ package com.example.keabank;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
+import com.example.keabank.internetConnetivity.ServerPostRequest;
 
-public class Login extends AppCompatActivity implements View.OnClickListener  {
+import static com.example.keabank.Logic.TransactionsManager.startTransactions;
+
+
+public class Login extends AppCompatActivity implements View.OnClickListener {
     EditText Email, Password;
     CheckBox remember_Checkbox;
-    Button Login;
-    String Tag = "Login class-->";
+    Button Login, Createuser,forgotpasswordbtn;
+    String Tag = "Login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getData();
         startup();
+        getData();
+        starttransactions();
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            Email.setText(extras.getString("username"));
-            Password.setText(extras.getString("password"));
+            Email.setText(extras.getString("usernmame"));
         }
 
         Login.setOnClickListener(this);
+        Createuser.setOnClickListener(this);
+        forgotpasswordbtn.setOnClickListener(this);
+
+    }
+
+    private void starttransactions() {
+        startTransactions(this);
     }
 
     private void startup() {
-        Email = findViewById(R.id.email);
+        Email = findViewById(R.id.conformEmail);
+        Createuser = findViewById(R.id.RegisterUser);
         Password = findViewById(R.id.password);
         remember_Checkbox = findViewById(R.id.Remember_me);
         Login = findViewById(R.id.Sign_in);
-
+        forgotpasswordbtn= findViewById(R.id.forgotpassword);
 
     }
+
 
     @Override
     public void onClick(View v) {
@@ -54,108 +67,121 @@ public class Login extends AppCompatActivity implements View.OnClickListener  {
 
             case R.id.Sign_in:
 
-                Log.d(Tag, "sign in button");
-                Passwordchecker passwordchecker = new Passwordchecker();
-                try {
-                    loginchecker(passwordchecker.execute().get());
+                loginchecker(UsernameAndPasswordvalidation());
+
+                   break;
+
+            case R.id.RegisterUser:
+                Intent intent = new Intent(this,NewCostumer.class);
+                startActivity(intent);
+
+                break;
+            case R.id.forgotpassword:
 
 
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+
+
+
+                LayoutInflater inflater = getLayoutInflater();
+
+                final View dialogView = inflater.inflate(R.layout.forgot_password, null);
+                dialogBuilder.setView(dialogView);
+
+                final EditText editEmail = (EditText) dialogView.findViewById(R.id.conformEmail);
+                final Button btnReset = (Button) dialogView.findViewById(R.id.Conform_email_btn);
+                final AlertDialog dialog = dialogBuilder.create();
+                final Button backbtn= dialogView.findViewById(R.id.btn_back);
+
+
+                backbtn.setOnClickListener(v2 -> {
+
+                    dialog.dismiss();
+
+
+
+
+                });
+
+
+                btnReset.setOnClickListener(v1 -> {
+                    if (TextUtils.isEmpty(editEmail.getText().toString())) {
+                        Toast.makeText(getApplication(), "Enter your registered email id", Toast.LENGTH_SHORT).show();
+                    }
+
+                    ServerPostRequest Emailchecker=  new ServerPostRequest("/checkemail?Email=" + editEmail.getText().toString());
+                    Emailchecker.execute();
+                    if (Emailchecker.getReponse()==200){
+                        ServerPostRequest RequestnewPassword= new ServerPostRequest("/forgotpassword?Email=" + editEmail.getText().toString());
+                        RequestnewPassword.execute();
+
+                        dialog.dismiss();
+
+
+                    }
+                });
+                dialog.show();
 
                 break;
 
 
+        }
+
 
         }
-    }
 
-    public void loginchecker (String serverresponse ){
+
+
+
+
+
+    public void loginchecker (Integer serverresponse){
         Intent intent = new Intent(this, Menu.class);
-        Log.d(Tag,serverresponse);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
 
 
-        if(remember_Checkbox.isChecked() && serverresponse.equals(String.valueOf(200))){
-            SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putString("username", Email.getText().toString());
-            editor.putString("password",Password.getText().toString());
+        Log.d(Tag,serverresponse.toString());
+
+
+
+
+      if(serverresponse==200){
+          Log.d(Tag,"setting shared pref");
+          editor.putString("username", Email.getText().toString().trim());
+            editor.putBoolean("checkbox",remember_Checkbox.isChecked());
             editor.apply();
-            startActivity(intent);
-
-        }else if(serverresponse.equals(String.valueOf(200))){
             startActivity(intent);
 
 
         }else
-            Toast.makeText(this, "Wrong password",
+            Toast.makeText(this, "username or password is wrong or both who knows",
                     Toast.LENGTH_LONG).show();
     }
 
     public void getData() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-        String username = pref.getString("username","");
-        String password = pref.getString("password","");
-        Log.d(Tag,username);
-        Log.d(Tag,password);
+        String username = pref.getString("username",null);
+        boolean ischeckedboxchecked=pref.getBoolean("checkbox",false);
 
-
-        if(!username.equalsIgnoreCase("") || !password.equalsIgnoreCase("")){
-
-            Intent intent = new Intent(this,Menu.class);
-            startActivity(intent);
+        if (username!=null && ischeckedboxchecked) {
+            Log.d(Tag, username + "<-- username after if");
+            Email.setText(username);
+            remember_Checkbox.setChecked(true);
 
         }
-
-
-
-
-
     }
 
 
 
-
-    public class Passwordchecker extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
+public Integer UsernameAndPasswordvalidation()  {
+        ServerPostRequest serverPostRequest = new ServerPostRequest("/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString());
+        serverPostRequest.execute();
+        return serverPostRequest.getReponse();
+}
 
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
 
 
-        @Override
-        protected String doInBackground(String... strings) {
-
-            String webapiadress = "http://10.149.88.167:8888/loginvalidation?" +"username=" + Email.getText().toString()+ "&password=" + Password.getText().toString();
-            String reponse="";
-            URL url;
-            try {
-                url = new URL(webapiadress);
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("GET");
-                con.connect();
-                reponse=String.valueOf(con.getResponseCode());
-                Log.d("Server response",reponse);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-
-            }
-
-            return reponse;
-        }
-
-
-    }
 }

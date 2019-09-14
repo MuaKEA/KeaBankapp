@@ -4,82 +4,112 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/roundcorners"
     tools:context=".Currency">
 
     <Spinner
         android:id="@+id/spinner1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="363dp"
-        android:layout_marginRight="363dp"
-        android:layout_marginBottom="707dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="127dp"
+        android:layout_marginBottom="26dp"
+        android:background="@drawable/roundcorners"
+        android:entries="@array/country_arrays"
+        app:layout_constraintBottom_toBottomOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"></Spinner>
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView" />
 
     <Spinner
         android:id="@+id/spinner2"
+        android:layout_width="214dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginBottom="43dp"
+        android:background="@drawable/roundcorners"
+        android:entries="@array/country_arrays"
+        app:layout_constraintBottom_toTopOf="@+id/show"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
-        android:layout_marginEnd="363dp"
-        android:layout_marginRight="363dp"
-        android:layout_marginBottom="359dp"
-        app:layout_constraintBottom_toTopOf="@+id/cal_btn"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/roundcorners"
+        android:text="fra"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toStartOf="@+id/spinner1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner1"></Spinner>
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout14" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="9dp"
+        android:background="@drawable/roundcorners"
+        android:text="til"
+        app:layout_constraintBottom_toTopOf="@+id/spinner2"
+        app:layout_constraintEnd_toStartOf="@+id/spinner1"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
-        android:id="@+id/cal_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="37dp"
-        android:layout_marginLeft="37dp"
-        android:layout_marginTop="154dp"
-        android:layout_marginEnd="272dp"
-        android:layout_marginRight="272dp"
-        android:layout_marginBottom="221dp"
-        android:text="Calculate"
+        android:id="@+id/currentcycal_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="27dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="201dp"
+        android:background="@drawable/roundcorners"
+        android:text="beregn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/show" />
 
-    <EditText
-        android:id="@+id/userinput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="99dp"
-        android:layout_marginLeft="99dp"
-        android:layout_marginTop="160dp"
-        android:layout_marginEnd="99dp"
-        android:layout_marginRight="99dp"
-        android:layout_marginBottom="42dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Amount"
-        app:layout_constraintBottom_toTopOf="@+id/show"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/show"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="121dp"
-        android:layout_marginLeft="121dp"
-        android:layout_marginTop="42dp"
-        android:layout_marginEnd="231dp"
-        android:layout_marginRight="231dp"
-        android:layout_marginBottom="175dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/cal_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="54dp"
+        android:layout_marginEnd="54dp"
+        android:layout_marginBottom="98dp"
+        android:text="beløb"
+        app:layout_constraintBottom_toTopOf="@+id/currentcycal_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userinput" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout14"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="36dp"
+        android:background="@drawable/roundcorners"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/userinput"
+            android:layout_width="match_parent"
+            android:layout_height="39dp"
+            android:baselineAligned="false"
+            android:hint="beløb" />
+    </android.support.design.widget.TextInputLayout>
 </android.support.constraint.ConstraintLayout>
+
+
+
+
+
